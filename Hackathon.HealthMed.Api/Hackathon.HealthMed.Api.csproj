@@ -20,10 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extension\" />
-    <Folder Include="Filter\" />
     <Folder Include="Kubernetes\" />
-    <Folder Include="Model\" />
   </ItemGroup>
 
 </Project>
