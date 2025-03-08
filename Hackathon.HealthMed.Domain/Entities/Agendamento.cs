@@ -9,6 +9,7 @@ public class Agendamento : BaseEntity
     public Guid HorarioId { get; private set; }
     public Horario? Horario { get; private set; }
     public eStatusAgendamento Status { get; private set; }
+    public string? JustificativaCancelamento { get; private set; }
 
     public Agendamento(Guid pacienteId, Guid horarioId, eStatusAgendamento status)
     {

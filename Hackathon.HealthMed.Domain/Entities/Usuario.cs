@@ -1,4 +1,6 @@
 ﻿using Hackathon.HealthMed.Domain.Enum;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Hackathon.HealthMed.Domain.Entities;
 public class Usuario : BaseEntity
@@ -15,6 +17,18 @@ public class Usuario : BaseEntity
         Email = email;
         SenhaHash = senhaHash;
         TipoUsuario = tipoUsuario;
+    }
+
+    public void AlterarSenha(string novaSenha)
+    {
+        SenhaHash = HashSenha(novaSenha);
+    }
+
+    private string HashSenha(string senha)
+    {
+        using var sha256 = SHA256.Create();
+        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(senha));
+        return Convert.ToBase64String(hashedBytes);
     }
 
     public void DesativarUsuario()
