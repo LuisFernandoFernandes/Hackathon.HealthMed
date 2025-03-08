@@ -23,4 +23,8 @@
     <Folder Include="Kubernetes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hackathon.HealthMed.Application\Hackathon.HealthMed.Application.csproj" />
+  </ItemGroup>
+
 </Project>
