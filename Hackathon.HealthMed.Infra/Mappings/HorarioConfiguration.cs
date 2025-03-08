@@ -15,5 +15,6 @@ public class HorarioConfiguration : IEntityTypeConfiguration<Horario>
         builder.Property(h => h.DataHorario).IsRequired();
         builder.Property(h => h.Status).IsRequired();
         builder.Property(h => h.Valor).IsRequired().HasColumnType("decimal(10,2)");
+        builder.Property(c => c.DataCriacao).HasColumnType("smalldatetime");
     }
 }

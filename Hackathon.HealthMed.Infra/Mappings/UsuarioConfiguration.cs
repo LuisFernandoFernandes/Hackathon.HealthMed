@@ -15,5 +15,6 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.Property(u => u.SenhaHash).HasMaxLength(255).IsRequired();
         builder.Property(u => u.TipoUsuario).IsRequired();
         builder.Property(u => u.Ativo).IsRequired();
+        builder.Property(c => c.DataCriacao).HasColumnType("smalldatetime");
     }
 }

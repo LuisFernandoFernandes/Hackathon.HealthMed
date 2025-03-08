@@ -14,5 +14,6 @@ public class MedicoConfiguration : IEntityTypeConfiguration<Medico>
         builder.HasOne(m => m.Usuario).WithOne().HasForeignKey<Medico>(m => m.UsuarioId);
         builder.Property(m => m.CRM).HasMaxLength(10).IsRequired();
         builder.Property(m => m.Especialidade).IsRequired();
+        builder.Property(c => c.DataCriacao).HasColumnType("smalldatetime");
     }
 }

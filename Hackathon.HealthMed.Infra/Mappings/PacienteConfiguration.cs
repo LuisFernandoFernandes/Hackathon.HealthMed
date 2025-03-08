@@ -13,5 +13,6 @@ internal class PacienteConfiguration : IEntityTypeConfiguration<Paciente>
         builder.Property(p => p.UsuarioId).IsRequired();
         builder.HasOne(p => p.Usuario).WithOne().HasForeignKey<Paciente>(p => p.UsuarioId);
         builder.Property(p => p.Cpf).HasMaxLength(11).IsRequired();
+        builder.Property(c => c.DataCriacao).HasColumnType("smalldatetime");
     }
 }
