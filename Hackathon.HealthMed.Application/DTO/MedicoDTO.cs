@@ -1,5 +1,4 @@
-﻿using Hackathon.HealthMed.Domain.Entities;
-using Hackathon.HealthMed.Domain.Enums;
+﻿using Hackathon.HealthMed.Domain.Enums;
 
 namespace Hackathon.HealthMed.Application.DTO;
 
