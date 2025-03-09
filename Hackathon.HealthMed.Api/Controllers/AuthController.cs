@@ -21,9 +21,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequestDTO loginDTO)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
     {
-        var usuario = _usuarioService.ValidarCredenciais(loginDTO.Login, loginDTO.Senha);
+        var usuario = await _usuarioService.ValidarCredenciais(loginDTO.Login, loginDTO.Senha, loginDTO.TipoUsuario);
 
         if (usuario == null)
             return Unauthorized("Usuário ou senha inválidos.");

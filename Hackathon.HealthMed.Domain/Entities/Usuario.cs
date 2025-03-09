@@ -1,4 +1,5 @@
-﻿using Hackathon.HealthMed.Domain.Enum;
+﻿using BCrypt.Net;
+using Hackathon.HealthMed.Domain.Enum;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -21,14 +22,12 @@ public class Usuario : BaseEntity
 
     public void AlterarSenha(string novaSenha)
     {
-        SenhaHash = HashSenha(novaSenha);
+        SenhaHash = BCrypt.Net.BCrypt.HashPassword(novaSenha);
     }
 
-    private string HashSenha(string senha)
+    public bool ValidarSenha(string senha)
     {
-        using var sha256 = SHA256.Create();
-        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(senha));
-        return Convert.ToBase64String(hashedBytes);
+        return BCrypt.Net.BCrypt.Verify(senha, SenhaHash);
     }
 
     public void DesativarUsuario()
