@@ -1,15 +1,12 @@
-﻿namespace Hackathon.HealthMed.Application.DTO;
+﻿using Hackathon.HealthMed.Domain.Enum;
 
-public class LoginMedicoRequestDTO
-{
-    public string CRM { get; set; }
-    public string Senha { get; set; }
-}
+namespace Hackathon.HealthMed.Application.DTO;
 
-public class LoginPacienteRequestDTO
+public class LoginRequestDTO
 {
-    public string EmailOuCPF { get; set; }
+    public string Login { get; set; }
     public string Senha { get; set; }
+    public eTipoUsuario TipoUsuario { get; set; }
 }
 
 public class LoginResponseDTO
