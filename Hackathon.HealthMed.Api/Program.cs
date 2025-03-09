@@ -1,23 +1,72 @@
-var builder = WebApplication.CreateBuilder(args);
+using Hackathon.HealthMed.Api.Filter;
+using Hackathon.HealthMed.IoC;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ModelStateValidatorFilter))).ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
+
+builder.Services.AdicionarDependencias(configuration);
+builder.Services.AdicionarDBContext(configuration);
+
+builder.Services.AddSwaggerGen();
+
+//builder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(options =>
+//{
+//// Filter out instrumentation of the Prometheus scraping endpoint.
+//options.Filter = ctx => ctx.Request.Path != "/metrics";
+//});
+
+//builder.Services.AddOpenTelemetry()
+//    .ConfigureResource(b =>
+//{
+//b.AddService("PostechFase2");
+//})
+//    .WithTracing(b => b
+//        .AddAspNetCoreInstrumentation()
+//        .AddHttpClientInstrumentation()
+//        .AddOtlpExporter())
+//    .WithMetrics(b => b
+//        .AddAspNetCoreInstrumentation()
+//        .AddHttpClientInstrumentation()
+//        .AddRuntimeInstrumentation()
+//        .AddProcessInstrumentation()
+//        .AddPrometheusExporter());
+
+//builder.Services.UseHttpClientMetrics();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
-app.UseHttpsRedirection();
+
+
+// Configure the HTTP request pipeline.
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+//app.MapMetrics();
+
+//app.UseMetricServer();
+//app.UseHttpMetrics();
+//app.UseOpenTelemetryPrometheusScrapingEndpoint();
+
+await app.RunAsync();
+
+public partial class Program { }
