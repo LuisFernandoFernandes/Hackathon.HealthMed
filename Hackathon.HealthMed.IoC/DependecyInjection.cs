@@ -17,12 +17,12 @@ namespace Hackathon.HealthMed.IoC;
 
 public static class DependecyInjection
 {
-    public static IServiceCollection AdicionarDBContext(this IServiceCollection services, IConfiguration configurarion
+    public static IServiceCollection AdicionarDBContext(this IServiceCollection services, IConfiguration configuration
     )
     {
         services.AddDbContext<AppDBContext>(options =>
         {
-            options.UseSqlServer(configurarion.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
         });
         return services;

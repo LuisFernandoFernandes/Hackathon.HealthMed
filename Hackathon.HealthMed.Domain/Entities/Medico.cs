@@ -9,9 +9,12 @@ public class Medico : BaseEntity
     public string CRM { get; set; }
     public eEspecialidade Especialidade { get; set; }
 
-    public Medico(Guid id, Guid usuarioId, string cRM, eEspecialidade especialidade)
+    public Medico()
     {
-        Id = id;
+    }
+
+    public Medico(Guid usuarioId, string cRM, eEspecialidade especialidade)
+    {
         UsuarioId = usuarioId;
         CRM = cRM;
         Especialidade = especialidade;

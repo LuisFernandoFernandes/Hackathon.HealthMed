@@ -12,6 +12,12 @@ public class Usuario : BaseEntity
     public eTipoUsuario TipoUsuario { get; private set; }
     public bool Ativo { get; private set; } = true;
 
+
+    public Usuario()
+    {
+
+    }
+
     public Usuario(string nome, string email, string senhaHash, eTipoUsuario tipoUsuario)
     {
         Nome = nome;

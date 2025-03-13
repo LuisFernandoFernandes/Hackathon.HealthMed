@@ -1,4 +1,5 @@
 using Hackathon.HealthMed.Api.Filter;
+using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +67,12 @@ app.MapControllers();
 //app.UseMetricServer();
 //app.UseHttpMetrics();
 //app.UseOpenTelemetryPrometheusScrapingEndpoint();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    await context.SeedData();
+}
 
 await app.RunAsync();
 

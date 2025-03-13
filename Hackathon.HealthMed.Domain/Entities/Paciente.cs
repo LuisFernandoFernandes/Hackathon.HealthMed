@@ -6,6 +6,10 @@ public class Paciente : BaseEntity
     public Usuario? Usuario { get; private set; }
     public string Cpf { get; private set; }
 
+    public Paciente()
+    {
+    }
+
     public Paciente(Guid usuarioId, string cpf)
     {
         UsuarioId = usuarioId;
