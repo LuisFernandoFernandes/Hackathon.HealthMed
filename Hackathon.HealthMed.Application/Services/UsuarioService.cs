@@ -13,22 +13,11 @@ public class UsuarioService(IUsuarioRepository _usuarioRepository, IMapper _mapp
 {
     public async Task<Usuario> ValidarCredenciais(string login, string senha, eTipoUsuario tipoUsuario)
     {
-        try
+        var usuario = await _usuarioRepository.ObterPorLogin(login, tipoUsuario);
+        if (usuario is null || !usuario.ValidarSenha(senha))
         {
-            Usuario usuario = await _usuarioRepository.ObterPorLogin(login, tipoUsuario);
-            if (usuario is null || !usuario.ValidarSenha(senha))
-            {
-                return null;
-                //return new ServiceResult<DDDDto>(new ValidacaoException("DDD Já Existe"));
-            }
-            return usuario;
-
+            return null;
         }
-        catch (Exception)
-        {
-
-            throw;
-        }
-
+        return usuario;
     }
 }

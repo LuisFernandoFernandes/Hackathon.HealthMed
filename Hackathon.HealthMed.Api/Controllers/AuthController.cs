@@ -23,14 +23,23 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
     {
-        var usuario = await _usuarioService.ValidarCredenciais(loginDTO.Login, loginDTO.Senha, loginDTO.TipoUsuario);
+        try
+        {
+            var usuario = await _usuarioService.ValidarCredenciais(loginDTO.Login, loginDTO.Senha, loginDTO.TipoUsuario);
 
-        if (usuario == null)
-            return Unauthorized("Usuário ou senha inválidos.");
+            if (usuario == null)
+                return Unauthorized("Usuário ou senha inválidos.");
 
-        var token = GerarToken(usuario);
+            var token = GerarToken(usuario);
 
-        return Ok(new LoginResponseDTO { Token = token });
+            return Ok(new LoginResponseDTO { Token = token });
+        }
+        catch (Exception)
+        {
+
+            return Unauthorized("Erro ao realizar login.");
+        }
+
     }
 
     private string GerarToken(Usuario usuario)
