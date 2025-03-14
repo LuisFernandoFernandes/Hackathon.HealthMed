@@ -37,6 +37,12 @@ public static class DependecyInjection
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IUsuarioService, UsuarioService>();
 
+        services.AddAutoMapper(typeof(MedicoMappingProfile));
+        services.AddScoped<IMedicoRepository, MedicoRepository>();
+        services.AddScoped<IMedicoService, MedicoService>();
+
+
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {

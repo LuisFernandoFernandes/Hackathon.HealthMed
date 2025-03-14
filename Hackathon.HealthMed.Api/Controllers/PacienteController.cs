@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hackathon.HealthMed.Application.Interfaces;
+using Hackathon.HealthMed.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hackathon.HealthMed.Api.Controllers;
 
-public class PacienteController : ControllerBase
+[Route("api/[controller]")]
+[ApiController]
+public class PacienteController(IPacienteService pacienteService) : ControllerBase
 {
+
+
 }
