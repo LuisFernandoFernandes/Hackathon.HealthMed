@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hackathon.HealthMed.Infra.Repository;
 
-public class UsuarioRepository(AppDBContext context) : IUsuarioRepository
+public class UsuarioRepository(AppDBContext _context) : IUsuarioRepository
 {
     public async Task<Usuario> ObterPorLogin(string login, eTipoUsuario tipoUsuario)
     {
@@ -23,18 +23,18 @@ public class UsuarioRepository(AppDBContext context) : IUsuarioRepository
 
     private async Task<Usuario> ObterPorLoginMedico(string login)
     {
-        return await context.Medicos.Where(a => a.CRM == login).Select(a => a.Usuario).FirstOrDefaultAsync();
+        return await _context.Medicos.Where(a => a.CRM == login).Select(a => a.Usuario).FirstOrDefaultAsync();
     }
 
     private async Task<Usuario> ObterPorLoginPaciente(string login)
     {
         if (login.Contains("@"))
         {
-            return await context.Usuarios.Where(a => a.Email == login).FirstOrDefaultAsync();
+            return await _context.Usuarios.Where(a => a.Email == login).FirstOrDefaultAsync();
         }
         else
         {
-            return await context.Pacientes.Where(a => a.Cpf == login).Select(a => a.Usuario).FirstOrDefaultAsync();
+            return await _context.Pacientes.Where(a => a.Cpf == login).Select(a => a.Usuario).FirstOrDefaultAsync();
         }
     }
 }
