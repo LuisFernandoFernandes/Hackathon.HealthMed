@@ -21,8 +21,9 @@ public class Agendamento : BaseEntity
         HorarioId = horarioId;
     }
 
-    public void AtualizarStatus(eStatusAgendamento novoStatus)
+    public void AtualizarStatus(eStatusAgendamento novoStatus, string? justificativaCancelamento = null)
     {
         Status = novoStatus;
+        JustificativaCancelamento = justificativaCancelamento;
     }
 }

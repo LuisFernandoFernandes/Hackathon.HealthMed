@@ -1,5 +1,6 @@
 ﻿using Hackathon.HealthMed.Domain.Enum;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hackathon.HealthMed.Application.DTO;
 

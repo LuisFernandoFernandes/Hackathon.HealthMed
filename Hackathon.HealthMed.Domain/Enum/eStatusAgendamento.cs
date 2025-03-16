@@ -5,5 +5,6 @@ public enum eStatusAgendamento
     Pendente,
     Agendado,
     Cancelado,
+    CanceladoPaciente,
     Realizado
 }

@@ -9,7 +9,7 @@ public interface IHorarioRepository
     Task<IEnumerable<Horario>> BuscarHorarioParaEdicao(Guid medicoId, Guid id, DateTime dataHorario);
     Task<bool> BuscarHorarioPorMedicoEData(Guid medicoId, DateTime dataHorario);
     Task<IEnumerable<Horario>> BuscarHorarios(Guid medicoId, eStatusHorario? Status);
-    Task<Horario?> BuscarHorarioDisponivel(Guid horarioId);
+    Task<Horario?> BuscarHorarioPorIdEStatus(Guid horarioId, eStatusHorario Status);
     Task Cadastrar(Horario horario);
     Task Editar(Horario horario);
 }

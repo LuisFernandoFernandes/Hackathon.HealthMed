@@ -48,8 +48,8 @@ public class HorarioRepository(AppDBContext _context) : IHorarioRepository
         return await query.ToListAsync();
     }
 
-    public Task<Horario?> BuscarHorarioDisponivel(Guid horarioId)
+    public Task<Horario?> BuscarHorarioPorIdEStatus(Guid horarioId, eStatusHorario status)
     {
-        return _context.Horarios.FirstOrDefaultAsync(a => a.Id == horarioId && a.Status == eStatusHorario.Disponivel);
+        return _context.Horarios.FirstOrDefaultAsync(a => a.Id == horarioId && a.Status == status);
     }
 }

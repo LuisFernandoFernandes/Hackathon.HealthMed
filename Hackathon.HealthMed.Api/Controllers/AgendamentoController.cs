@@ -18,4 +18,29 @@ public class AgendamentoController(IAgendamentoService _agendamentoService) : Co
         return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
     }
 
+    [HttpPut("confirmar")]
+    [Authorize(Roles = "Medico")]
+    public async Task<IActionResult> AceitarOuRecusarConsulta([FromBody] ConfirmarAgendamentoDTO dto)
+    {
+        var resultado = await _agendamentoService.ConfirmarAgendamento(dto);
+        return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
+    }
+
+    [HttpPut("cancelar-paciente")]
+    [Authorize(Roles = "Paciente")]
+    public async Task<IActionResult> CancelarConsultaPaciente([FromBody] CancelarAgendamentoPacienteDTO dto)
+    {
+        var resultado = await _agendamentoService.CancelarPorPaciente(dto);
+        return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
+    }
+
+    [HttpPut("cancelar-medico")]
+    [Authorize(Roles = "Medico")]
+    public async Task<IActionResult> CancelarConsultaMedico([FromBody] CancelarAgendamentoMedicoDTO dto)
+    {
+        var resultado = await _agendamentoService.CancelarPorMedico(dto);
+        return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
+    }
+
+
 }
