@@ -12,4 +12,9 @@ public class MedicoRepository(AppDBContext _context) : IMedicoRepository
     {
         return await _context.Medicos.Include(a => a.Usuario).Where(a => especialidade == null || a.Especialidade == especialidade).ToListAsync();
     }
+
+    public async Task<Guid> BuscarMedicoPorUsuarioId(Guid usuarioId)
+    {
+        return await _context.Medicos.Where(a => a.UsuarioId == usuarioId).Select(a => a.Id).FirstOrDefaultAsync();
+    }
 }

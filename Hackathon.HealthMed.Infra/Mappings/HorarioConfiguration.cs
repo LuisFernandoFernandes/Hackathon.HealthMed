@@ -9,6 +9,7 @@ public class HorarioConfiguration : IEntityTypeConfiguration<Horario>
     public void Configure(EntityTypeBuilder<Horario> builder)
     {
         builder.ToTable("Horarios");
+        builder.HasIndex(h => new { h.MedicoId, h.DataHorario }).IsUnique().HasDatabaseName("IX_Horarios_Medico_DataHorario");
         builder.HasKey(h => h.Id);
         builder.Property(h => h.MedicoId).IsRequired();
         builder.HasOne(h => h.Medico).WithMany().HasForeignKey(h => h.MedicoId).IsRequired();

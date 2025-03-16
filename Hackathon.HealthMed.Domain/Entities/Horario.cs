@@ -10,6 +10,10 @@ public class Horario : BaseEntity
     public eStatusHorario Status { get; private set; }
     public decimal Valor { get; private set; }
 
+    public Horario()
+    {
+    }
+
     public Horario(Guid medicoId, DateTime dataHorario, eStatusHorario status, decimal valor)
     {
         MedicoId = medicoId;
@@ -17,10 +21,4 @@ public class Horario : BaseEntity
         Status = status;
         Valor = valor;
     }
-
-    public void AtualizarStatus(eStatusHorario novoStatus)
-    {
-        Status = novoStatus;
-    }
-
 }
