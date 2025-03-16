@@ -41,6 +41,10 @@ public static class DependecyInjection
         services.AddScoped<IMedicoRepository, MedicoRepository>();
         services.AddScoped<IMedicoService, MedicoService>();
 
+        services.AddAutoMapper(typeof(HorarioMappingProfile));
+        services.AddScoped<IHorarioRepository, HorarioRepository>();
+        services.AddScoped<IHorarioService, HorarioService>();
+
 
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
