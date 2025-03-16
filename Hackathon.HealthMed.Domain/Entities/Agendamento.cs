@@ -8,14 +8,17 @@ public class Agendamento : BaseEntity
     public Paciente? Paciente { get; private set; }
     public Guid HorarioId { get; private set; }
     public Horario? Horario { get; private set; }
-    public eStatusAgendamento Status { get; private set; }
+    public eStatusAgendamento Status { get; private set; } = eStatusAgendamento.Pendente;
     public string? JustificativaCancelamento { get; private set; }
 
-    public Agendamento(Guid pacienteId, Guid horarioId, eStatusAgendamento status)
+    public Agendamento()
+    {
+    }
+
+    public Agendamento(Guid pacienteId, Guid horarioId)
     {
         PacienteId = pacienteId;
         HorarioId = horarioId;
-        Status = status;
     }
 
     public void AtualizarStatus(eStatusAgendamento novoStatus)

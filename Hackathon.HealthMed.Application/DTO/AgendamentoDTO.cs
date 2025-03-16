@@ -10,3 +10,8 @@ public class AgendamentoDTO
     public eStatusAgendamento Status { get; set; }
     public string? JustificativaCancelamento { get; set; }
 }
+
+public class AgendarConsultaDTO
+{
+    public Guid HorarioId { get; set; }
+}

@@ -2,6 +2,7 @@
 
 public enum eStatusAgendamento
 {
+    Pendente,
     Agendado,
     Cancelado,
     Realizado

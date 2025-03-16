@@ -16,9 +16,14 @@ public class HorarioRepository(AppDBContext _context) : IHorarioRepository
 
     public async Task Editar(Horario horario)
     {
-        _context.Horarios.Update(horario);
+        if (_context.Entry(horario).State == EntityState.Detached)
+        {
+            _context.Horarios.Attach(horario);
+            _context.Entry(horario).State = EntityState.Modified;
+        }
         await _context.SaveChangesAsync();
     }
+
 
     public async Task<bool> BuscarHorarioPorMedicoEData(Guid medicoId, DateTime dataHorario)
     {
@@ -35,8 +40,16 @@ public class HorarioRepository(AppDBContext _context) : IHorarioRepository
     {
         var query = _context.Horarios.Where(a => a.MedicoId == medicoId && a.DataHorario > DateTime.UtcNow);
 
-        query = status.HasValue ? query.Where(a => a.Status == status.Value) : query;
+        if (status.HasValue)
+        {
+            query = query.Where(a => a.Status == status.Value);
+        }
 
         return await query.ToListAsync();
+    }
+
+    public Task<Horario?> BuscarHorarioDisponivel(Guid horarioId)
+    {
+        return _context.Horarios.FirstOrDefaultAsync(a => a.Id == horarioId && a.Status == eStatusHorario.Disponivel);
     }
 }
