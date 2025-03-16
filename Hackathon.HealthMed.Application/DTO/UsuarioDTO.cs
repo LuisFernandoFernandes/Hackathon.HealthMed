@@ -2,12 +2,14 @@
 
 namespace Hackathon.HealthMed.Application.DTO;
 
-internal class UsuarioDTO
+public class LoginRequestDTO
 {
-    public Guid? Id { get; set; }
-    public string Nome { get; set; }
-    public string Email { get; set; }
+    public string Login { get; set; }
     public string Senha { get; set; }
     public eTipoUsuario TipoUsuario { get; set; }
-    public bool Ativo { get; set; }
+}
+
+public class LoginResponseDTO
+{
+    public string Token { get; set; }
 }
