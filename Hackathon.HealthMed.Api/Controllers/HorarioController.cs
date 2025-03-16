@@ -28,9 +28,17 @@ public class HorarioController(IHorarioService _horarioService) : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Medico")]
-    public async Task<IActionResult> GetHorarios()
+    public async Task<IActionResult> BuscarMeusHorarios()
     {
-        var resultado = await _horarioService.BuscarHorarios();
+        var resultado = await _horarioService.BuscarMeusHorarios();
+        return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
+    }
+
+    [HttpGet("medico/{medicoId}")]
+    [Authorize(Roles = "Paciente")]
+    public async Task<IActionResult> BuscarHorariosPorMedico(Guid medicoId)
+    {
+        var resultado = await _horarioService.BuscarHorariosPorMedico(medicoId);
         return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
     }
 }

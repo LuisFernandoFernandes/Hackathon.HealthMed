@@ -80,15 +80,23 @@ public class HorarioService(IHorarioRepository _horarioRepository, IMedicoReposi
         }
     }
 
-    public async Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarHorarios()
+    public async Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarMeusHorarios()
+    {
+        var medicoId = await ObterMedicoId();
+        return await BuscarHorarios(medicoId);
+    }
+
+    public async Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarHorariosPorMedico(Guid medicoId)
+    {
+        return await BuscarHorarios(medicoId, eStatusHorario.Disponivel);
+    }
+
+    private async Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarHorarios(Guid medicoId, eStatusHorario? status = null)
     {
         try
         {
-            var medicoId = await ObterMedicoId();
-            var horarios = await _horarioRepository.BuscarHorarios(medicoId);
-
+            var horarios = await _horarioRepository.BuscarHorarios(medicoId, status);
             var horariosDto = _mapper.Map<IEnumerable<HorarioDTO>>(horarios);
-
             return new ServiceResult<IEnumerable<HorarioDTO>>(horariosDto);
         }
         catch (Exception ex)
@@ -96,8 +104,6 @@ public class HorarioService(IHorarioRepository _horarioRepository, IMedicoReposi
             return new ServiceResult<IEnumerable<HorarioDTO>>(ex);
         }
     }
-
-
 
     private async Task<Guid> ObterMedicoId()
     {

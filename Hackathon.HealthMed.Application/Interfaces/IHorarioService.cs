@@ -8,5 +8,6 @@ public interface IHorarioService
 {
     Task<ServiceResult<Guid>> CadastrarHorario(CadastrarHorarioDTO horario);
     Task<ServiceResult<bool>> EditarHorario(EditarHorarioDTO horarioDto);
-    Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarHorarios();
+    Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarMeusHorarios();
+    Task<ServiceResult<IEnumerable<HorarioDTO>>> BuscarHorariosPorMedico(Guid medicoId);
 }
