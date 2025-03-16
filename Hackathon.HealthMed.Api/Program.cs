@@ -15,6 +15,8 @@ builder.Services.AdicionarDBContext(configuration);
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SchemaFilter<EnumSchemaFilter>();
+
     // Define o esquema de segurança: Bearer
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
@@ -69,6 +71,8 @@ builder.Services.AddSwaggerGen(options =>
 //        .AddPrometheusExporter());
 
 //builder.Services.UseHttpClientMetrics();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
