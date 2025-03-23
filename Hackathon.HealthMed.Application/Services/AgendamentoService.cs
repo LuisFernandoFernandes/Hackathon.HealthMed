@@ -8,12 +8,39 @@ using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Hackathon.HealthMed.Infra.Repository;
 using Microsoft.AspNetCore.Http;
+using StackExchange.Redis;
 using System.Security.Claims;
 
 namespace Hackathon.HealthMed.Application.Services;
 
-public class AgendamentoService(IAgendamentoRepository _agendamentoRepository, IMedicoRepository _medicoRepository, IPacienteRepository _pacienteRepository, IHorarioRepository _horarioRepository, IMapper _mapper, IHttpContextAccessor _httpContextAccessor) : IAgendamentoService
+public class AgendamentoService : IAgendamentoService
 {
+    private readonly IAgendamentoRepository _agendamentoRepository;
+    private readonly IMedicoRepository _medicoRepository;
+    private readonly IPacienteRepository _pacienteRepository;
+    private readonly IHorarioRepository _horarioRepository;
+    private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IDatabase _redisDb;
+
+    public AgendamentoService(
+        IAgendamentoRepository agendamentoRepository,
+        IMedicoRepository medicoRepository,
+        IPacienteRepository pacienteRepository,
+        IHorarioRepository horarioRepository,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IConnectionMultiplexer redis)
+    {
+        _agendamentoRepository = agendamentoRepository;
+        _medicoRepository = medicoRepository;
+        _pacienteRepository = pacienteRepository;
+        _horarioRepository = horarioRepository;
+        _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
+        _redisDb = redis.GetDatabase();
+    }
+
     public async Task<ServiceResult<Guid>> AgendarConsulta(AgendarConsultaDTO dto)
     {
         try
@@ -34,6 +61,8 @@ public class AgendamentoService(IAgendamentoRepository _agendamentoRepository, I
             horario.AtualizarStatus(eStatusHorario.Reservado);
 
             await _horarioRepository.Editar(horario);
+            var cacheKey = $"horarios_{horario.MedicoId}";
+            await _redisDb.KeyDeleteAsync(cacheKey);
 
             return new ServiceResult<Guid>(agendamento.Id);
         }
@@ -67,6 +96,9 @@ public class AgendamentoService(IAgendamentoRepository _agendamentoRepository, I
 
                 horario.AtualizarStatus(eStatusHorario.Disponivel);
                 await _horarioRepository.Editar(horario);
+
+                var cacheKey = $"horarios_{horario.MedicoId}";
+                await _redisDb.KeyDeleteAsync(cacheKey);
             }
 
             await _agendamentoRepository.Editar(agendamento);
@@ -96,6 +128,8 @@ public class AgendamentoService(IAgendamentoRepository _agendamentoRepository, I
 
             horario.AtualizarStatus(eStatusHorario.Disponivel);
             await _horarioRepository.Editar(horario);
+            var cacheKey = $"horarios_{medicoId}";
+            await _redisDb.KeyDeleteAsync(cacheKey);
 
             await _agendamentoRepository.Editar(agendamento);
 
@@ -130,6 +164,8 @@ public class AgendamentoService(IAgendamentoRepository _agendamentoRepository, I
             {
                 horario.AtualizarStatus(eStatusHorario.Disponivel);
                 await _horarioRepository.Editar(horario);
+                var cacheKey = $"horarios_{horario.MedicoId}";
+                await _redisDb.KeyDeleteAsync(cacheKey);
             }
 
             await _agendamentoRepository.Editar(agendamento);

@@ -1,6 +1,8 @@
 using Hackathon.HealthMed.Api.Filter;
 using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.IoC;
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -45,6 +47,13 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
+});
+
+// Exemplo em Startup.cs ou Program.cs
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var redisConfig = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
+    return ConnectionMultiplexer.Connect(redisConfig);
 });
 
 

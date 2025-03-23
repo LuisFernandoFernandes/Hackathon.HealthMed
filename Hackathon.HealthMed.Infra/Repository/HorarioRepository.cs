@@ -38,7 +38,8 @@ public class HorarioRepository(AppDBContext _context) : IHorarioRepository
 
     public async Task<IEnumerable<Horario>> BuscarHorarios(Guid medicoId, eStatusHorario? status = null)
     {
-        var query = _context.Horarios.Where(a => a.MedicoId == medicoId && a.DataHorario > DateTime.UtcNow);
+        var hoje = DateTime.UtcNow.Date;
+        var query = _context.Horarios.Where(a => a.MedicoId == medicoId && a.DataHorario >= hoje);
 
         if (status.HasValue)
         {
