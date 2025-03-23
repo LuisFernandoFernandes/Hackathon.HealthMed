@@ -12,7 +12,7 @@ public class AgendamentoConfiguration : IEntityTypeConfiguration<Agendamento>
         builder.Property(a => a.PacienteId).IsRequired();
         builder.HasOne(a => a.Paciente).WithMany().HasForeignKey(a => a.PacienteId).OnDelete(DeleteBehavior.NoAction).IsRequired();
         builder.Property(a => a.HorarioId).IsRequired();
-        builder.HasOne(a => a.Horario).WithOne().HasForeignKey<Agendamento>(a => a.HorarioId).OnDelete(DeleteBehavior.NoAction).IsRequired();
+        builder.HasOne(a => a.Horario).WithMany().HasForeignKey(a => a.HorarioId).OnDelete(DeleteBehavior.NoAction).IsRequired();
         builder.Property(a => a.Status).IsRequired();
         builder.Property(a => a.JustificativaCancelamento).HasMaxLength(255).IsRequired(false);
         builder.Property(c => c.DataCriacao).HasColumnType("smalldatetime");

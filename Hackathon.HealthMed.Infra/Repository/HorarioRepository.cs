@@ -24,7 +24,6 @@ public class HorarioRepository(AppDBContext _context) : IHorarioRepository
         await _context.SaveChangesAsync();
     }
 
-
     public async Task<bool> BuscarHorarioPorMedicoEData(Guid medicoId, DateTime dataHorario)
     {
         return await _context.Horarios.AnyAsync(a => a.MedicoId == medicoId && a.DataHorario == dataHorario);
