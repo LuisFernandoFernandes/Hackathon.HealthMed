@@ -1,7 +1,9 @@
-using Hackathon.HealthMed.Api.Filter;
+﻿using Hackathon.HealthMed.Api.Filter;
 using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.IoC;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Polly;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +21,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SchemaFilter<EnumSchemaFilter>();
 
-    // Define o esquema de seguran�a: Bearer
+    // Define o esquema de segurança: Bearer
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Description = "Insira o token JWT desta forma: Bearer {seu token}",
@@ -29,7 +31,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
 
-    // Configura o requisito de seguran�a para todos os endpoints
+    // Configura o requisito de segurança para todos os endpoints
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
     {
         {
@@ -112,11 +114,21 @@ app.MapControllers();
 //app.UseHttpMetrics();
 //app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
-using (var scope = app.Services.CreateScope())
+var retryPolicy = Policy
+    .Handle<SqlException>()
+    .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(5),
+        onRetry: (exception, timeSpan, retryCount, context) =>
+        {
+            Console.WriteLine($"⏳ Tentativa {retryCount}: SQL Server ainda não está pronto.");
+        });
+
+await retryPolicy.ExecuteAsync(async () =>
 {
+    using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    await context.Database.MigrateAsync();
     await context.SeedData();
-}
+});
 
 await app.RunAsync();
 

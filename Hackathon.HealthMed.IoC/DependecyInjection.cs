@@ -22,8 +22,7 @@ public static class DependecyInjection
     {
         services.AddDbContext<AppDBContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") + "Database=HealthMedDB;", sqlOptions => sqlOptions.EnableRetryOnFailure());
         });
         return services;
     }
