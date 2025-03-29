@@ -1,4 +1,4 @@
-﻿namespace Hackathon.HealthMed.Domain.Enums;
+﻿namespace Hackathon.HealthMed.Domain.Enum;
 
 public enum eEspecialidade
 {

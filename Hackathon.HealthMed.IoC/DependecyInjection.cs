@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using Hackathon.HealthMed.Application.Interfaces;
 using Hackathon.HealthMed.Application.Mappings;
 using Hackathon.HealthMed.Application.Services;

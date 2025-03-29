@@ -1,6 +1,6 @@
 ﻿using Hackathon.HealthMed.Application.DTO;
 using Hackathon.HealthMed.Application.Result;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 
 namespace Hackathon.HealthMed.Application.Interfaces;
 

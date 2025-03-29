@@ -1,4 +1,4 @@
-﻿using Hackathon.HealthMed.Domain.Enums;
+﻿using Hackathon.HealthMed.Domain.Enum;
 
 namespace Hackathon.HealthMed.Domain.Entities;
 

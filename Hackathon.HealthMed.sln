@@ -39,6 +39,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Tests.U
 		{C1E2D2D1-F465-463A-86B7-A4B4DD6D5BF0} = {C1E2D2D1-F465-463A-86B7-A4B4DD6D5BF0}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Tests.Integration", "Hackathon.HealthMed.Tests.Integration\Hackathon.HealthMed.Tests.Integration.csproj", "{65359479-53E5-40A7-BC5B-8E11B54A972C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07B84789-06C0-461A-90B4-C16B50A134DF} = {07B84789-06C0-461A-90B4-C16B50A134DF}
+		{18EFFC13-4CF0-4E57-B8E2-9EE4D4CA468C} = {18EFFC13-4CF0-4E57-B8E2-9EE4D4CA468C}
+		{AB345DB6-B04C-4895-BF2F-48D3B44CB5A6} = {AB345DB6-B04C-4895-BF2F-48D3B44CB5A6}
+		{C1E2D2D1-F465-463A-86B7-A4B4DD6D5BF0} = {C1E2D2D1-F465-463A-86B7-A4B4DD6D5BF0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +77,10 @@ Global
 		{383F6624-D721-40EB-9727-6A60530471F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{383F6624-D721-40EB-9727-6A60530471F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{383F6624-D721-40EB-9727-6A60530471F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65359479-53E5-40A7-BC5B-8E11B54A972C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65359479-53E5-40A7-BC5B-8E11B54A972C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65359479-53E5-40A7-BC5B-8E11B54A972C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65359479-53E5-40A7-BC5B-8E11B54A972C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

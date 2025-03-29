@@ -1,5 +1,5 @@
 ﻿using Hackathon.HealthMed.Application.Interfaces;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

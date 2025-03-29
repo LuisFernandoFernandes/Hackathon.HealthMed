@@ -1,7 +1,7 @@
 ﻿
 
 using Hackathon.HealthMed.Domain.Entities;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 
 namespace Hackathon.HealthMed.Infra.Interfaces;
 

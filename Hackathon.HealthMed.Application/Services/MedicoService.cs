@@ -3,7 +3,7 @@ using Hackathon.HealthMed.Application.DTO;
 using Hackathon.HealthMed.Application.Interfaces;
 using Hackathon.HealthMed.Application.Result;
 using Hackathon.HealthMed.Domain.Entities;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Interfaces;
 
 namespace Hackathon.HealthMed.Application.Services;

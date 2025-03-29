@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <UserSecretsId>cc28b7de-0079-433f-a5a2-b19b80814682</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageReference Include="xunit" Version="2.9.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.3" />
+        <PackageReference Include="Xunit.Extensions.Ordering" Version="1.4.5" />
+        <PackageReference Include="Testcontainers.MsSql" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Hackathon.HealthMed.Api\Hackathon.HealthMed.Api.csproj" />
+        <ProjectReference Include="..\Hackathon.HealthMed.Application\Hackathon.HealthMed.Application.csproj" />
+        <ProjectReference Include="..\Hackathon.HealthMed.Domain\Hackathon.HealthMed.Domain.csproj" />
+        <ProjectReference Include="..\Hackathon.HealthMed.Infra\Hackathon.HealthMed.Infra.csproj" />
+        <ProjectReference Include="..\Hackathon.HealthMed.IoC\Hackathon.HealthMed.IoC.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infra\" />
+    </ItemGroup>
+
+</Project>

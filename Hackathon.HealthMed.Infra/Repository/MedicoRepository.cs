@@ -1,5 +1,5 @@
 ﻿using Hackathon.HealthMed.Domain.Entities;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;

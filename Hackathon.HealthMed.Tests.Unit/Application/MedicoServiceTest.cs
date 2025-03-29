@@ -2,7 +2,7 @@
 using Hackathon.HealthMed.Application.DTO;
 using Hackathon.HealthMed.Application.Services;
 using Hackathon.HealthMed.Domain.Entities;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Moq;
 

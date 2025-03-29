@@ -1,6 +1,6 @@
 ﻿using Hackathon.HealthMed.Domain.Entities;
 using Hackathon.HealthMed.Domain.Enum;
-using Hackathon.HealthMed.Domain.Enums;
+using Hackathon.HealthMed.Domain.Enum;
 
 namespace Hackathon.HealthMed.Tests.Unit.Domain.Entities;
 
