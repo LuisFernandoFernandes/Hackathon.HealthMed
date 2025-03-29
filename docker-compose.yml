@@ -21,6 +21,9 @@ services:
       - healthnet
 
   healthmed-api:
+    build:
+      context: .
+      dockerfile: Hackathon.HealthMed.Api/Dockerfile
     image: hackathon-healthmed:1.0
     container_name: healthmed
     depends_on:
