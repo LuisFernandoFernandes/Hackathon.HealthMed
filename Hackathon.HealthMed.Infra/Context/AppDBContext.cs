@@ -40,11 +40,13 @@ public class AppDBContext : DbContext
     /// </summary>
     public async Task SeedData()
     {
-        // Se não existir nenhum usuário, insere os dados iniciais
-        if (!Usuarios.Any())
+        try
         {
-            // Criando usuários iniciais (Médicos e Pacientes) com GUIDs fixos
-            var usuarios = new List<Usuario>
+            // Se não existir nenhum usuário, insere os dados iniciais
+            if (!Usuarios.Any())
+            {
+                // Criando usuários iniciais (Médicos e Pacientes) com GUIDs fixos
+                var usuarios = new List<Usuario>
                 {
                     new Usuario("João Médico", "joao@medico.com", BCrypt.Net.BCrypt.HashPassword("123456"), eTipoUsuario.Medico)
                     {
@@ -98,10 +100,10 @@ public class AppDBContext : DbContext
                     }
                 };
 
-            await Usuarios.AddRangeAsync(usuarios);
+                await Usuarios.AddRangeAsync(usuarios);
 
-            // Criando médicos associados aos usuários médicos
-            var medicos = new List<Medico>
+                // Criando médicos associados aos usuários médicos
+                var medicos = new List<Medico>
                 {
                     new Medico(usuarios[0].Id, "123456", eEspecialidade.Cardiologia)
                     {
@@ -145,10 +147,10 @@ public class AppDBContext : DbContext
                     }
                 };
 
-            await Medicos.AddRangeAsync(medicos);
+                await Medicos.AddRangeAsync(medicos);
 
-            // Criando pacientes associados aos usuários pacientes
-            var pacientes = new List<Paciente>
+                // Criando pacientes associados aos usuários pacientes
+                var pacientes = new List<Paciente>
                 {
                     new Paciente(usuarios[1].Id, "12345678900")
                     {
@@ -162,9 +164,13 @@ public class AppDBContext : DbContext
                     }
                 };
 
-            await Pacientes.AddRangeAsync(pacientes);
+                await Pacientes.AddRangeAsync(pacientes);
 
-            await SaveChangesAsync();
+                await SaveChangesAsync();
+            }
+        }
+        catch
+        {
         }
     }
 }

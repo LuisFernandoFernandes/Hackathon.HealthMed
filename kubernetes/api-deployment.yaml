@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthmed-api-deployment
+spec:
+  replicas: 2 # para alta disponibilidade
+  selector:
+    matchLabels:
+      app: healthmed-api
+  template:
+    metadata:
+      labels:
+        app: healthmed-api
+    spec:
+      containers:
+      - name: healthmed-api
+        image: hackathon-healthmed:1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: ConnectionStrings__DefaultConnection
+          value: "Server=sqlserver;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+        - name: ConnectionStrings__Redis
+          value: "redis:6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthmed-api
+spec:
+  selector:
+    app: healthmed-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
