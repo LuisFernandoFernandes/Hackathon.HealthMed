@@ -19,7 +19,7 @@ jobs:
       sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
-          SA_PASSWORD: "SuaSenha123!"
+          SA_PASSWORD: ${{ secrets.SQL_SA_PASSWORD }}
           ACCEPT_EULA: "Y"
         ports:
           - 1433:1433
@@ -44,7 +44,7 @@ jobs:
       - name: 🧪 Rodar testes
         env:
           ASPNETCORE_ENVIRONMENT: Test
-          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=HealthMedDB;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+          ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
           ConnectionStrings__Redis: "localhost:6379,abortConnect=false"
         run: dotnet test --no-restore --verbosity normal
 
