@@ -35,11 +35,11 @@ public class MedicoControllerTest : IClassFixture<CustomWebApplicationFactory<Pr
     public async Task MedicoController_GetMedicos_DeveRetornarListaDeMedicos()
     {
         // Arrange: Limpar as tabelas e semear dados
-        _context.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Horarios");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
 
         // Semente: Inserir um usuário do tipo Médico e o respectivo registro de Médico
         string senha = "senhaMedico";
@@ -67,11 +67,11 @@ public class MedicoControllerTest : IClassFixture<CustomWebApplicationFactory<Pr
     public async Task MedicoController_GetMedicos_DeveRetornarForbiddenParaUsuarioMedico()
     {
         // Arrange: Limpar as tabelas e semear dados
-        _context.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Horarios");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-        _context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
 
         // Semente: Inserir um usuário do tipo Médico e o respectivo registro de Médico
         string senha = "senhaMedico";

@@ -4,6 +4,7 @@ using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Hackathon.HealthMed.Infra.Repository;
 using Hackathon.HealthMed.Tests.Integration.Fixture;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Extensions.Ordering;
 
 namespace Hackathon.HealthMed.Tests.Integration.Infra;
@@ -22,9 +23,20 @@ public class UsuarioRepositoryTest
         // Opcionalmente, você pode inicializar dados aqui se desejar
     }
 
+    private async Task ClearDatabaseAsync()
+    {
+        // A ordem de deleção é importante para respeitar as chaves estrangeiras.
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+    }
+
     [Fact]
     public async Task ObterPorLogin_Medico_DeveRetornarUsuario()
     {
+        await ClearDatabaseAsync();
         // Arrange: Cria um usuário e um registro de médico associado com um CRM específico.
         var usuario = new Usuario("Medico Exemplo", "medico@example.com", "hashSenha", eTipoUsuario.Medico);
         _context.Usuarios.Add(usuario);
@@ -45,6 +57,7 @@ public class UsuarioRepositoryTest
     [Fact]
     public async Task ObterPorLogin_PacienteComEmail_DeveRetornarUsuario()
     {
+        await ClearDatabaseAsync();
         // Arrange: Cria um usuário do tipo Paciente com e-mail.
         var usuario = new Usuario("Paciente Exemplo", "paciente@example.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuario);
@@ -61,6 +74,7 @@ public class UsuarioRepositoryTest
     [Fact]
     public async Task ObterPorLogin_PacienteComCPF_DeveRetornarUsuario()
     {
+        await ClearDatabaseAsync();
         // Arrange: Cria um usuário do tipo Paciente e um registro de paciente associado com um CPF.
         var usuario = new Usuario("Paciente CPF", "outraemail@example.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuario);
@@ -81,6 +95,9 @@ public class UsuarioRepositoryTest
     [Fact]
     public async Task ObterPorLogin_LoginInexistente_DeveRetornarNull()
     {
+        // Arrange: Limpa o banco antes do teste
+        await ClearDatabaseAsync();
+
         // Act: Tenta obter um usuário com um login que não existe.
         var resultado = await _repository.ObterPorLogin("inexistente", eTipoUsuario.Paciente);
 

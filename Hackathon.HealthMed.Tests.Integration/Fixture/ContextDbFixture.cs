@@ -39,18 +39,18 @@ namespace Hackathon.HealthMed.Tests.Integration.Fixture
         }
 
         // Método para limpar (e opcionalmente semear) os dados das tabelas reais da aplicação
-        public void InicializaDados()
+        public async Task InicializaDados()
         {
             // Excluir os dados na ordem correta para evitar conflitos de chave estrangeira:
             // 1. Agendamentos (filha de HorariosDisponiveis e Pacientes)
             // 2. HorariosDisponiveis (depende de Medicos)
             // 3. Medicos e Pacientes (dependem de Usuarios)
             // 4. Usuarios
-            Context!.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-            Context.Database.ExecuteSqlRaw("DELETE FROM HorariosDisponiveis");
-            Context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-            Context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-            Context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+            await Context!.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM HorariosDisponiveis");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
 
             // Opcional: Inserir dados de teste
 

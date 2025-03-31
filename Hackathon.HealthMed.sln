@@ -31,6 +31,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E8AAF5B-4F50-4A56-8488-C819605F891A}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		test.runsettings = test.runsettings
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Tests.Unit", "Hackathon.HealthMed.Tests.Unit\Hackathon.HealthMed.Tests.Unit.csproj", "{383F6624-D721-40EB-9727-6A60530471F4}"

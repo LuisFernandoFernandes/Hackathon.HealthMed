@@ -35,11 +35,11 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         {
             // Arrange
             // Limpa os dados das tabelas para evitar conflitos com FK
-            _context.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Horarios");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
 
             // Semente: Inserir um usuário do tipo Médico
             string senhaOriginal = "senha123";
@@ -75,11 +75,11 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         {
             // Arrange
             // Limpa os dados das tabelas
-            _context.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Horarios");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
 
             // Semente: Inserir um usuário do tipo Paciente
             string senhaOriginal = "senha456";

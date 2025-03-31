@@ -32,6 +32,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Infra
         /// </summary>
         private async Task ClearHorariosAsync()
         {
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
             await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
         }
 

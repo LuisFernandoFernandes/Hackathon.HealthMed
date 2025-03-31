@@ -31,20 +31,21 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
             });
         }
 
-        private void ClearDatabase()
+        private async Task ClearDatabaseAsync()
         {
-            _context.Database.ExecuteSqlRaw("DELETE FROM Agendamentos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Horarios");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Medicos");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Pacientes");
-            _context.Database.ExecuteSqlRaw("DELETE FROM Usuarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
         }
+
 
         [Fact, Order(1)]
         public async Task HorarioController_CadastrarHorario_DeveCadastrarHorario_ComSucesso()
         {
             // Arrange: limpar tabelas e semear usuário e médico
-            ClearDatabase();
+            await ClearDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -82,7 +83,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_EditarHorario_DeveEditarHorario_ComSucesso()
         {
             // Arrange: limpar e semear dados
-            ClearDatabase();
+            await ClearDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -126,7 +127,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_BuscarMeusHorarios_DeveRetornarHorarios_DoMedicoAutenticado()
         {
             // Arrange: limpar e semear dados
-            ClearDatabase();
+            await ClearDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -165,7 +166,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_BuscarHorariosPorMedico_DeveRetornarHorarios_Disponiveis()
         {
             // Arrange: limpar e semear dados
-            ClearDatabase();
+            await ClearDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
