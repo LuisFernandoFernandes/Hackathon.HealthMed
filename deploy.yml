@@ -10,6 +10,25 @@ jobs:
     name: ✅ Testes
     runs-on: ubuntu-latest
 
+    services:
+      redis:
+        image: redis:7.2
+        ports:
+          - 6379:6379
+
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: "SuaSenha123!"
+          ACCEPT_EULA: "Y"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
     steps:
       - name: 📥 Checkout do código
         uses: actions/checkout@v3
@@ -23,6 +42,10 @@ jobs:
         run: dotnet restore
 
       - name: 🧪 Rodar testes
+        env:
+          ASPNETCORE_ENVIRONMENT: Test
+          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=HealthMedDB;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+          ConnectionStrings__Redis: "localhost:6379,abortConnect=false"
         run: dotnet test --no-restore --verbosity normal
 
   build-and-deploy:
