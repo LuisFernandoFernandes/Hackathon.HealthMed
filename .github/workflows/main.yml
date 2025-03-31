@@ -57,10 +57,33 @@ jobs:
       - name: 📥 Checkout do código
         uses: actions/checkout@v3
 
-      - name: 🐳 Build da imagem Docker
+      - name: Instalar kind
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
+      - name: Criar cluster Kubernetes com kind
+        run: |
+          kind create cluster --name healthmed
+
+      - name: Configurar kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.26.0'
+
+      - name: Build da imagem Docker
         run: |
           docker build -t hackathon-healthmed:latest -f Hackathon.HealthMed.Api/Dockerfile .
 
-      - name: ⚙️ Aplicar recursos do Kubernetes
+      - name: Carregar imagem no cluster kind
+        run: |
+          kind load docker-image hackathon-healthmed:latest --name healthmed
+
+      - name: Aplicar recursos do Kubernetes
         run: |
           kubectl apply -f kubernetes/
+
+      - name: Verificar status dos pods
+        run: |
+          kubectl get pods -A
