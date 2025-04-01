@@ -11,10 +11,15 @@ spec:
     metadata:
       labels:
         app: healthmed-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
     spec:
       containers:
       - name: healthmed-api
-        image: hackathon-healthmed:1.0
+        image: luisfernandofernandes/hackathon-healthmed:2.1
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:

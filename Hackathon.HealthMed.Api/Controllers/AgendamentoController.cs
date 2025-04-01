@@ -18,7 +18,7 @@ public class AgendamentoController(IAgendamentoService _agendamentoService) : Co
         return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
     }
 
-    [HttpPut("confirmar")]
+    [HttpPut("confirmar-medico")]
     [Authorize(Roles = "Medico")]
     public async Task<IActionResult> AceitarOuRecusarConsulta([FromBody] ConfirmarAgendamentoDTO dto)
     {

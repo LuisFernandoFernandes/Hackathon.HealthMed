@@ -51,6 +51,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{CCCB9B4B-C1B9-4237-9252-C5345FCD74F5}"
 	ProjectSection(SolutionItems) = preProject
 		api-deployment.yaml = api-deployment.yaml
+		grafana-deployment.yaml = grafana-deployment.yaml
+		prometheus-deployment.yaml = prometheus-deployment.yaml
 		redis-deployment.yaml = redis-deployment.yaml
 		sqlserver-deployment.yaml = sqlserver-deployment.yaml
 	EndProjectSection

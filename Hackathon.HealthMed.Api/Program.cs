@@ -3,25 +3,34 @@ using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.IoC;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Polly;
+using Prometheus;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-
+// Configuração dos controllers e filtros
 builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+    options.Filters.Add(typeof(ModelStateValidatorFilter)))
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
 
-builder.Services.AddControllers(options => options.Filters.Add(typeof(ModelStateValidatorFilter))).ConfigureApiBehaviorOptions(options => { options.SuppressModelStateInvalidFilter = true; });
-
+// Injeção de dependências e configuração do DB
 builder.Services.AdicionarDependencias(configuration);
 builder.Services.AdicionarDBContext(configuration);
 
+// Configuração do Swagger com JWT
 builder.Services.AddSwaggerGen(options =>
 {
     options.SchemaFilter<EnumSchemaFilter>();
-
-    // Define o esquema de segurança: Bearer
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Description = "Insira o token JWT desta forma: Bearer {seu token}",
@@ -30,8 +39,6 @@ builder.Services.AddSwaggerGen(options =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-
-    // Configura o requisito de segurança para todos os endpoints
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
     {
         {
@@ -51,46 +58,44 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Exemplo em Startup.cs ou Program.cs
+// Configuração do Redis
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var redisConfig = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
     return ConnectionMultiplexer.Connect(redisConfig);
 });
 
+// Filtrar a instrumentação para não interferir no endpoint /metrics
+builder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(options =>
+{
+    options.Filter = ctx => ctx.Request.Path != "/metrics";
+});
 
-//builder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(options =>
-//{
-//// Filter out instrumentation of the Prometheus scraping endpoint.
-//options.Filter = ctx => ctx.Request.Path != "/metrics";
-//});
+// Configuração do OpenTelemetry (Tracing e Metrics)
+// Aqui são adicionadas as instrumentações para ASP.NET Core, HTTP, runtime, process e o exporter do Prometheus
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(b => b.AddService("HealthMed"))
+    .WithTracing(b => b
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter())
+    .WithMetrics(b => b
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddProcessInstrumentation()
+        .AddPrometheusExporter());
 
-//builder.Services.AddOpenTelemetry()
-//    .ConfigureResource(b =>
-//{
-//b.AddService("PostechFase2");
-//})
-//    .WithTracing(b => b
-//        .AddAspNetCoreInstrumentation()
-//        .AddHttpClientInstrumentation()
-//        .AddOtlpExporter())
-//    .WithMetrics(b => b
-//        .AddAspNetCoreInstrumentation()
-//        .AddHttpClientInstrumentation()
-//        .AddRuntimeInstrumentation()
-//        .AddProcessInstrumentation()
-//        .AddPrometheusExporter());
-
-//builder.Services.UseHttpClientMetrics();
+builder.Services.UseHttpClientMetrics();
 
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+// Configurações para ambiente de desenvolvimento
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -99,25 +104,19 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
-
-// Configure the HTTP request pipeline.
-//app.UseHttpsRedirection();
-
+// Configuração do pipeline HTTP
 app.UseAuthorization();
-
 app.MapControllers();
-
 //app.MapMetrics();
-
 //app.UseMetricServer();
 //app.UseHttpMetrics();
-//app.UseOpenTelemetryPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
+// Política de retry para a migração e seed do banco de dados
 var retryPolicy = Policy
     .Handle<SqlException>()
     .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(5),
-        onRetry: (exception, timeSpan, retryCount, context) =>
+        (exception, timeSpan, retryCount, context) =>
         {
             Console.WriteLine($"⏳ Tentativa {retryCount}: SQL Server ainda não está pronto.");
         });
@@ -125,9 +124,9 @@ var retryPolicy = Policy
 await retryPolicy.ExecuteAsync(async () =>
 {
     using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-    await context.Database.MigrateAsync();
-    await context.SeedData();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    await dbContext.Database.MigrateAsync();
+    await dbContext.SeedData();
 });
 
 await app.RunAsync();
