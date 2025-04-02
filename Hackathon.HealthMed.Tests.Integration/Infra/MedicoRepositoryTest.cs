@@ -4,6 +4,7 @@ using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Hackathon.HealthMed.Infra.Repository;
 using Hackathon.HealthMed.Tests.Integration.Fixture;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,21 +14,27 @@ using Xunit.Extensions.Ordering;
 namespace Hackathon.HealthMed.Tests.Integration.Infra;
 
 [Collection(nameof(ContextDbCollection))]
-[Order(4)]
+[Order(7)]
 public class MedicoRepositoryTest
 {
     private readonly AppDBContext _context;
     private readonly IMedicoRepository _repository;
+    private readonly ContextDbFixture _fixture;
+
 
     public MedicoRepositoryTest(ContextDbFixture fixture)
     {
+        _fixture = fixture;
         _context = fixture.Context!;
         _repository = new MedicoRepository(_context);
     }
 
-    [Fact]
+
+    [Fact, Order(1)]
     public async Task BuscarMedicoPorUsuarioId_DeveRetornarIdMedico_QuandoEncontrado()
     {
+        await _fixture.ResetDatabaseAsync();
+
         // Arrange: Cria um usuário do tipo Médico e registra o médico
         var usuario = new Usuario("Medico Exemplo", "medico@example.com", "hashSenha", eTipoUsuario.Medico);
         _context.Usuarios.Add(usuario);
@@ -45,9 +52,13 @@ public class MedicoRepositoryTest
         Assert.Equal(medico.Id, resultado);
     }
 
-    [Fact]
+
+
+    [Fact, Order(2)]
     public async Task BuscarMedicoPorUsuarioId_DeveRetornarGuidEmpty_QuandoMedicoNaoEncontrado()
     {
+        await _fixture.ResetDatabaseAsync();
+
         // Act: Passa um Guid aleatório (sem médico cadastrado)
         var resultado = await _repository.BuscarMedicoPorUsuarioId(Guid.NewGuid());
 
@@ -55,9 +66,11 @@ public class MedicoRepositoryTest
         Assert.Equal(Guid.Empty, resultado);
     }
 
-    [Fact]
+    [Fact, Order(3)]
     public async Task BuscarMedicos_DeveRetornarMedicos_CorretamenteFiltrados()
     {
+        await _fixture.ResetDatabaseAsync();
+
         // Arrange: Limpa e semeia dados (ou adicione medicos sem se preocupar com duplicação se o fixture já limpar)
         // Cria dois usuários do tipo Médico
         var usuario1 = new Usuario("Medico 1", "medico1@example.com", "hashSenha", eTipoUsuario.Medico);

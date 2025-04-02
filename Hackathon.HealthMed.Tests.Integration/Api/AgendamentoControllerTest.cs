@@ -16,29 +16,21 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
 {
     private readonly HttpClient _client;
     private readonly AppDBContext _context;
+    private readonly ContextDbFixture _fixture;
 
     public AgendamentoControllerTest(CustomWebApplicationFactory<Program> factory, ContextDbFixture contextDbFixture)
     {
+        _fixture = contextDbFixture;
         factory.conectionString = contextDbFixture.sqlConnection;
         _context = contextDbFixture.Context!;
         _client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = true });
-    }
-
-    private async Task ClearDatabaseAsync()
-    {
-        // Ordem: primeiro remover as dependências, depois as tabelas principais
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
     }
 
     [Fact, Order(1)]
     public async Task AgendamentoController_AgendarConsulta_DeveAgendarConsulta_ComSucesso()
     {
         // Arrange
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Semear um usuário do tipo Paciente e criar seu registro no Paciente
         string senhaPaciente = "senhaPaciente";
@@ -93,7 +85,7 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
     public async Task AgendamentoController_ConfirmarAgendamento_DeveConfirmarConsulta_ComSucesso()
     {
         // Arrange
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Semear um usuário do tipo Paciente e criar seu registro
         string senhaPaciente = "senhaPaciente";
@@ -158,7 +150,7 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
     public async Task AgendamentoController_CancelarConsultaPaciente_DeveCancelarConsulta_ComSucesso()
     {
         // Arrange
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Semear um usuário do tipo Paciente e criar seu registro
         string senhaPaciente = "senhaPaciente";
@@ -218,7 +210,7 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
     public async Task AgendamentoController_CancelarConsultaMedico_DeveCancelarConsulta_ComSucesso()
     {
         // Arrange
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Semear um usuário do tipo Paciente e criar seu registro
         string senhaPaciente = "senhaPaciente";
@@ -272,5 +264,60 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var resultado = await response.Content.ReadFromJsonAsync<bool>();
         Assert.True(resultado);
+    }
+
+    [Fact, Order(5)]
+    public async Task ConsultarAgendamentos_DeveRetornarAgendamentosDoDiaAtual()
+    {
+        // Arrange
+        await _fixture.ResetDatabaseAsync();
+
+        // Cria um usuário Paciente
+        string senhaPaciente = "senhaPaciente";
+        var usuarioPaciente = new Usuario("Paciente Teste", "paciente@exemplo.com",
+            BCrypt.Net.BCrypt.HashPassword(senhaPaciente), eTipoUsuario.Paciente);
+        _context.Usuarios.Add(usuarioPaciente);
+        await _context.SaveChangesAsync();
+
+        var paciente = new Paciente(usuarioPaciente.Id, "12345678901");
+        _context.Pacientes.Add(paciente);
+        await _context.SaveChangesAsync();
+
+        // Cria um usuário Médico e seu registro, necessário para o horário
+        string senhaMedico = "senhaMedico";
+        var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
+            BCrypt.Net.BCrypt.HashPassword(senhaMedico), eTipoUsuario.Medico);
+        _context.Usuarios.Add(usuarioMedico);
+        await _context.SaveChangesAsync();
+
+        var medico = new Medico(usuarioMedico.Id, "CRM0001", eEspecialidade.Cardiologia);
+        _context.Medicos.Add(medico);
+        await _context.SaveChangesAsync();
+
+        // Cria um horário com DataHorario a partir da meia-noite de hoje (ou no futuro)
+        var dataHorario = DateTime.Today.AddHours(10); // exemplo: 10h da manhã
+        var horario = new Horario(medico.Id, dataHorario, 150);
+        _context.Horarios.Add(horario);
+        await _context.SaveChangesAsync();
+
+        // Cria um agendamento vinculado ao paciente e ao horário
+        var agendamento = new Agendamento(paciente.Id, horario.Id);
+        _context.Agendamentos.Add(agendamento);
+        await _context.SaveChangesAsync();
+
+        // Configura o cliente para simular um usuário do tipo Paciente
+        _client.DefaultRequestHeaders.Remove("X-Test-UserId");
+        _client.DefaultRequestHeaders.Remove("X-Test-Roles");
+        _client.DefaultRequestHeaders.Add("X-Test-UserId", usuarioPaciente.Id.ToString());
+        _client.DefaultRequestHeaders.Add("X-Test-Roles", "Paciente");
+
+        // Act
+        var response = await _client.GetAsync("/api/agendamento");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var agendamentos = await response.Content.ReadFromJsonAsync<IEnumerable<AgendamentoDTO>>();
+        Assert.NotNull(agendamentos);
+        Assert.Single(agendamentos);
     }
 }

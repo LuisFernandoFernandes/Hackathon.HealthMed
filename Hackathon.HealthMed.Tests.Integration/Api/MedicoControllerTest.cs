@@ -16,9 +16,11 @@ public class MedicoControllerTest : IClassFixture<CustomWebApplicationFactory<Pr
 {
     private readonly HttpClient _client;
     private readonly AppDBContext _context;
+    private readonly ContextDbFixture _fixture;
 
     public MedicoControllerTest(CustomWebApplicationFactory<Program> factory, ContextDbFixture contextDbFixture)
     {
+        _fixture = contextDbFixture;
         // Configura a connection string para o container SQL
         factory.conectionString = contextDbFixture.sqlConnection;
         _context = contextDbFixture.Context!;
@@ -35,11 +37,7 @@ public class MedicoControllerTest : IClassFixture<CustomWebApplicationFactory<Pr
     public async Task MedicoController_GetMedicos_DeveRetornarListaDeMedicos()
     {
         // Arrange: Limpar as tabelas e semear dados
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+        await _fixture.ResetDatabaseAsync();
 
         // Semente: Inserir um usuário do tipo Médico e o respectivo registro de Médico
         string senha = "senhaMedico";
@@ -67,11 +65,7 @@ public class MedicoControllerTest : IClassFixture<CustomWebApplicationFactory<Pr
     public async Task MedicoController_GetMedicos_DeveRetornarForbiddenParaUsuarioMedico()
     {
         // Arrange: Limpar as tabelas e semear dados
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+        await _fixture.ResetDatabaseAsync();
 
         // Semente: Inserir um usuário do tipo Médico e o respectivo registro de Médico
         string senha = "senhaMedico";

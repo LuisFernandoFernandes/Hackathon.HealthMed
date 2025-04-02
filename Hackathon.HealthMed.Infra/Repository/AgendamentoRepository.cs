@@ -1,4 +1,5 @@
 ﻿using Hackathon.HealthMed.Domain.Entities;
+using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -26,5 +27,24 @@ public class AgendamentoRepository(AppDBContext _context) : IAgendamentoReposito
     public async Task<Agendamento?> BuscarPorId(Guid agendamentoId)
     {
         return await _context.Agendamentos.Where(a => a.Id == agendamentoId).FirstOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<Agendamento>> ConsultarAgendamentosPorUsuario(eTipoUsuario usuarioTipo, Guid usuarioTipoId)
+    {
+        var hoje = DateTime.Today;
+
+        switch (usuarioTipo)
+        {
+            case eTipoUsuario.Medico:
+
+                return await _context.Agendamentos.Where(a => a.Horario != null && a.Horario.MedicoId == usuarioTipoId && a.Horario.DataHorario >= hoje).ToListAsync();
+
+            case eTipoUsuario.Paciente:
+
+                return await _context.Agendamentos.Where(a => a.Horario != null && a.PacienteId == usuarioTipoId && a.Horario.DataHorario >= hoje).ToListAsync();
+
+            default:
+                return await Task.FromResult(Enumerable.Empty<Agendamento>());
+        }
     }
 }

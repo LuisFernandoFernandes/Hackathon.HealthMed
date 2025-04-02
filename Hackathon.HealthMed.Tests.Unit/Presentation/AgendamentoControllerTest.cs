@@ -2,6 +2,7 @@
 using Hackathon.HealthMed.Application.DTO;
 using Hackathon.HealthMed.Application.Interfaces;
 using Hackathon.HealthMed.Application.Result;
+using Hackathon.HealthMed.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -213,4 +214,53 @@ public class AgendamentoControllerTest
         var exception = Assert.IsType<Exception>(badRequestResult.Value);
         Assert.Equal(errorMessage, exception.Message);
     }
+
+    [Fact]
+    public async Task ConsultarAgendamentos_DeveRetornarOk_QuandoResultadoForSucesso()
+    {
+        // Arrange
+        var agendamentos = new List<AgendamentoDTO>
+    {
+        new AgendamentoDTO
+        {
+            Id = Guid.NewGuid(),
+            PacienteId = Guid.NewGuid(),
+            HorarioId = Guid.NewGuid(),
+            Status = eStatusAgendamento.Pendente,
+            JustificativaCancelamento = null
+        }
+    };
+        var serviceResult = new ServiceResult<IEnumerable<AgendamentoDTO>>(agendamentos);
+        _agendamentoServiceMock
+            .Setup(s => s.ConsultarAgendamentos())
+            .ReturnsAsync(serviceResult);
+
+        // Act
+        var result = await _agendamentoController.ConsultarAgendamentos();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var data = Assert.IsAssignableFrom<IEnumerable<AgendamentoDTO>>(okResult.Value);
+        Assert.NotEmpty(data);
+    }
+
+    [Fact]
+    public async Task ConsultarAgendamentos_DeveRetornarBadRequest_QuandoResultadoForFalha()
+    {
+        // Arrange
+        var errorMessage = "Erro ao consultar agendamentos.";
+        var serviceResult = new ServiceResult<IEnumerable<AgendamentoDTO>>(new Exception(errorMessage));
+        _agendamentoServiceMock
+            .Setup(s => s.ConsultarAgendamentos())
+            .ReturnsAsync(serviceResult);
+
+        // Act
+        var result = await _agendamentoController.ConsultarAgendamentos();
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        var exception = Assert.IsType<Exception>(badRequestResult.Value);
+        Assert.Equal(errorMessage, exception.Message);
+    }
+
 }

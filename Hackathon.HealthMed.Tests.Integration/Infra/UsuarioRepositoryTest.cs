@@ -10,33 +10,25 @@ using Xunit.Extensions.Ordering;
 namespace Hackathon.HealthMed.Tests.Integration.Infra;
 
 [Collection(nameof(ContextDbCollection))]
-[Order(2)]
+[Order(5)]
 public class UsuarioRepositoryTest
 {
     private readonly AppDBContext _context;
     private readonly IUsuarioRepository _repository;
+    private readonly ContextDbFixture _fixture;
 
     public UsuarioRepositoryTest(ContextDbFixture fixture)
     {
+        _fixture = fixture;
         _context = fixture.Context!;
         _repository = new UsuarioRepository(_context);
-        // Opcionalmente, você pode inicializar dados aqui se desejar
     }
 
-    private async Task ClearDatabaseAsync()
-    {
-        // A ordem de deleção é importante para respeitar as chaves estrangeiras.
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
-    }
 
-    [Fact]
+    [Fact, Order(1)]
     public async Task ObterPorLogin_Medico_DeveRetornarUsuario()
     {
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
         // Arrange: Cria um usuário e um registro de médico associado com um CRM específico.
         var usuario = new Usuario("Medico Exemplo", "medico@example.com", "hashSenha", eTipoUsuario.Medico);
         _context.Usuarios.Add(usuario);
@@ -54,10 +46,10 @@ public class UsuarioRepositoryTest
         Assert.Equal(usuario.Id, resultado.Id);
     }
 
-    [Fact]
+    [Fact, Order(2)]
     public async Task ObterPorLogin_PacienteComEmail_DeveRetornarUsuario()
     {
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
         // Arrange: Cria um usuário do tipo Paciente com e-mail.
         var usuario = new Usuario("Paciente Exemplo", "paciente@example.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuario);
@@ -71,10 +63,10 @@ public class UsuarioRepositoryTest
         Assert.Equal(usuario.Id, resultado.Id);
     }
 
-    [Fact]
+    [Fact, Order(3)]
     public async Task ObterPorLogin_PacienteComCPF_DeveRetornarUsuario()
     {
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
         // Arrange: Cria um usuário do tipo Paciente e um registro de paciente associado com um CPF.
         var usuario = new Usuario("Paciente CPF", "outraemail@example.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuario);
@@ -92,11 +84,11 @@ public class UsuarioRepositoryTest
         Assert.Equal(usuario.Id, resultado.Id);
     }
 
-    [Fact]
+    [Fact, Order(4)]
     public async Task ObterPorLogin_LoginInexistente_DeveRetornarNull()
     {
         // Arrange: Limpa o banco antes do teste
-        await ClearDatabaseAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Act: Tenta obter um usuário com um login que não existe.
         var resultado = await _repository.ObterPorLogin("inexistente", eTipoUsuario.Paciente);

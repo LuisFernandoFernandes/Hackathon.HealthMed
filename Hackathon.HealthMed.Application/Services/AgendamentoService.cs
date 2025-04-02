@@ -178,6 +178,34 @@ public class AgendamentoService : IAgendamentoService
         }
     }
 
+    public async Task<ServiceResult<IEnumerable<AgendamentoDTO>>> ConsultarAgendamentos()
+    {
+        try
+        {
+            var usuarioTipo = ObterUsuarioTipo();
+            var usuarioTipoId = usuarioTipo == eTipoUsuario.Medico ? await ObterMedicoId() : await ObterPacienteId();
+
+            var agendamentos = await _agendamentoRepository.ConsultarAgendamentosPorUsuario(usuarioTipo, usuarioTipoId);
+            var agendamentosDtoMapped = _mapper.Map<IEnumerable<AgendamentoDTO>>(agendamentos);
+
+            return new ServiceResult<IEnumerable<AgendamentoDTO>>(agendamentosDtoMapped);
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResult<IEnumerable<AgendamentoDTO>>(ex);
+        }
+    }
+
+    private eTipoUsuario ObterUsuarioTipo()
+    {
+        var UsuarioTipo = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
+        if (string.IsNullOrEmpty(UsuarioTipo))
+        {
+            throw new ValidacaoException("Usuário não autenticado.");
+        }
+        return UsuarioTipo == "Medico" ? eTipoUsuario.Medico : eTipoUsuario.Paciente;
+    }
+
     private Guid ObterUsuarioId()
     {
         var usuarioIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -209,5 +237,6 @@ public class AgendamentoService : IAgendamentoService
         }
         return medicoId;
     }
+
 
 }

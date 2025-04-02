@@ -4,26 +4,33 @@ using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
 using Hackathon.HealthMed.Infra.Repository;
 using Hackathon.HealthMed.Tests.Integration.Fixture;
+using Microsoft.EntityFrameworkCore;
 using Xunit.Extensions.Ordering;
 
 namespace Hackathon.HealthMed.Tests.Integration.Infra;
 
 [Collection(nameof(ContextDbCollection))]
-[Order(3)]
+[Order(6)]
 public class PacienteRepositoryTest
 {
     private readonly AppDBContext _context;
     private readonly IPacienteRepository _repository;
+    private readonly ContextDbFixture _fixture;
 
     public PacienteRepositoryTest(ContextDbFixture fixture)
     {
+        _fixture = fixture;
         _context = fixture.Context!;
         _repository = new PacienteRepository(_context);
+
     }
 
-    [Fact]
+
+    [Fact, Order(1)]
     public async Task BuscarPacientePorUsuarioId_DeveRetornarIdPacienteQuandoEncontrado()
     {
+        await _fixture.ResetDatabaseAsync();
+
         // Arrange: Cria um usuário do tipo Paciente e o registro de paciente associado
         var usuario = new Usuario("Paciente Teste", "paciente@exemplo.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuario);
@@ -41,9 +48,11 @@ public class PacienteRepositoryTest
         Assert.Equal(paciente.Id, result);
     }
 
-    [Fact]
+    [Fact, Order(2)]
     public async Task BuscarPacientePorUsuarioId_DeveRetornarGuidEmptyQuandoNaoEncontrado()
     {
+        await _fixture.ResetDatabaseAsync();
+
         // Arrange: Gera um Guid aleatório que não tenha paciente associado
         var randomUserId = Guid.NewGuid();
 

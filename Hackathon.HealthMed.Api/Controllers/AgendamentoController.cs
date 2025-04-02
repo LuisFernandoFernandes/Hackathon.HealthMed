@@ -42,5 +42,12 @@ public class AgendamentoController(IAgendamentoService _agendamentoService) : Co
         return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> ConsultarAgendamentos()
+    {
+        var resultado = await _agendamentoService.ConsultarAgendamentos();
+        return resultado.IsSuccess ? Ok(resultado.Data) : BadRequest(resultado.Error);
+    }
+
 
 }

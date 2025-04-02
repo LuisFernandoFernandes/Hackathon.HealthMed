@@ -17,10 +17,12 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
     {
         private readonly HttpClient _client;
         private readonly AppDBContext _context;
+        private readonly ContextDbFixture _fixture;
 
         public AuthControllerTest(CustomWebApplicationFactory<Program> factory, ContextDbFixture contextDbFixture)
         {
             // Configura a connection string para o container do SQL Server
+            _fixture = contextDbFixture;
             factory.conectionString = contextDbFixture.sqlConnection;
             _context = contextDbFixture.Context!;
 
@@ -35,11 +37,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         {
             // Arrange
             // Limpa os dados das tabelas para evitar conflitos com FK
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+            await _fixture.ResetDatabaseAsync();
 
             // Semente: Inserir um usuário do tipo Médico
             string senhaOriginal = "senha123";
@@ -75,11 +73,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         {
             // Arrange
             // Limpa os dados das tabelas
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+            await _fixture.ResetDatabaseAsync();
 
             // Semente: Inserir um usuário do tipo Paciente
             string senhaOriginal = "senha456";

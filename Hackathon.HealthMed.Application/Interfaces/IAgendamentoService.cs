@@ -9,4 +9,5 @@ public interface IAgendamentoService
     Task<ServiceResult<bool>> ConfirmarAgendamento(ConfirmarAgendamentoDTO dto);
     Task<ServiceResult<bool>> CancelarPorMedico(CancelarAgendamentoMedicoDTO dto);
     Task<ServiceResult<bool>> CancelarPorPaciente(CancelarAgendamentoPacienteDTO dto);
+    Task<ServiceResult<IEnumerable<AgendamentoDTO>>> ConsultarAgendamentos();
 }

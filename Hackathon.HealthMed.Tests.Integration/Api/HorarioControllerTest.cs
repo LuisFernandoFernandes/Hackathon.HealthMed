@@ -20,9 +20,11 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
     {
         private readonly HttpClient _client;
         private readonly AppDBContext _context;
+        private readonly ContextDbFixture _fixture;
 
         public HorarioControllerTest(CustomWebApplicationFactory<Program> factory, ContextDbFixture contextDbFixture)
         {
+            _fixture = contextDbFixture;
             factory.conectionString = contextDbFixture.sqlConnection;
             _context = contextDbFixture.Context!;
             _client = factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -31,21 +33,12 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
             });
         }
 
-        private async Task ClearDatabaseAsync()
-        {
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
-            await _context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
-        }
-
 
         [Fact, Order(1)]
         public async Task HorarioController_CadastrarHorario_DeveCadastrarHorario_ComSucesso()
         {
             // Arrange: limpar tabelas e semear usuário e médico
-            await ClearDatabaseAsync();
+            await _fixture.ResetDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -83,7 +76,6 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_EditarHorario_DeveEditarHorario_ComSucesso()
         {
             // Arrange: limpar e semear dados
-            await ClearDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -127,7 +119,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_BuscarMeusHorarios_DeveRetornarHorarios_DoMedicoAutenticado()
         {
             // Arrange: limpar e semear dados
-            await ClearDatabaseAsync();
+            await _fixture.ResetDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",
@@ -166,7 +158,7 @@ namespace Hackathon.HealthMed.Tests.Integration.Api
         public async Task HorarioController_BuscarHorariosPorMedico_DeveRetornarHorarios_Disponiveis()
         {
             // Arrange: limpar e semear dados
-            await ClearDatabaseAsync();
+            await _fixture.ResetDatabaseAsync();
 
             string senha = "senhaMedico";
             var usuarioMedico = new Usuario("Medico Teste", "medico@exemplo.com",

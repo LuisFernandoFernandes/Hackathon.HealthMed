@@ -10,24 +10,18 @@ using Xunit.Extensions.Ordering;
 namespace Hackathon.HealthMed.Tests.Integration.Infra;
 
 [Collection(nameof(ContextDbCollection))]
-[Order(6)]
+[Order(9)]
 public class AgendamentoRepositoryTest
 {
     private readonly AppDBContext _context;
     private readonly IAgendamentoRepository _repository;
+    private readonly ContextDbFixture _fixture;
 
     public AgendamentoRepositoryTest(ContextDbFixture fixture)
     {
+        _fixture = fixture;
         _context = fixture.Context!;
         _repository = new AgendamentoRepository(_context);
-    }
-
-    /// <summary>
-    /// Limpa a tabela de Agendamentos para garantir um ambiente limpo.
-    /// </summary>
-    private async Task ClearAgendamentosAsync()
-    {
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
     }
 
     /// <summary>
@@ -37,6 +31,7 @@ public class AgendamentoRepositoryTest
     /// </summary>
     private async Task<(Guid pacienteId, Guid horarioId)> SeedAgendamentoDependenciesAsync()
     {
+        await _fixture.ResetDatabaseAsync();
         // Cria um usuário do tipo Paciente
         var usuarioPaciente = new Usuario("Paciente Teste", "paciente@example.com", "hashSenha", eTipoUsuario.Paciente);
         _context.Usuarios.Add(usuarioPaciente);
@@ -66,11 +61,11 @@ public class AgendamentoRepositoryTest
         return (paciente.Id, horario.Id);
     }
 
-    [Fact]
+    [Fact, Order(1)]
     public async Task Adicionar_DeveInserirAgendamentoNoBanco()
     {
         // Arrange
-        await ClearAgendamentosAsync();
+        await _fixture.ResetDatabaseAsync();
         var (pacienteId, horarioId) = await SeedAgendamentoDependenciesAsync();
 
         var agendamento = new Agendamento(pacienteId, horarioId);
@@ -87,11 +82,12 @@ public class AgendamentoRepositoryTest
         Assert.Equal(eStatusAgendamento.Pendente, inserted.Status);
     }
 
-    [Fact]
+    [Fact, Order(2)]
+
     public async Task Editar_DeveAtualizarAgendamentoNoBanco()
     {
         // Arrange
-        await ClearAgendamentosAsync();
+        await _fixture.ResetDatabaseAsync();
         var (pacienteId, horarioId) = await SeedAgendamentoDependenciesAsync();
 
         var agendamento = new Agendamento(pacienteId, horarioId);
@@ -112,11 +108,12 @@ public class AgendamentoRepositoryTest
         Assert.Equal(eStatusAgendamento.Agendado, updated.Status);
     }
 
-    [Fact]
+    [Fact, Order(3)]
+
     public async Task BuscarPorId_DeveRetornarAgendamento_QuandoExistir()
     {
         // Arrange
-        await ClearAgendamentosAsync();
+        await _fixture.ResetDatabaseAsync();
         var (pacienteId, horarioId) = await SeedAgendamentoDependenciesAsync();
 
         var agendamento = new Agendamento(pacienteId, horarioId);
@@ -130,11 +127,12 @@ public class AgendamentoRepositoryTest
         Assert.Equal(agendamento.Id, result.Id);
     }
 
-    [Fact]
+    [Fact, Order(4)]
+
     public async Task BuscarPorId_DeveRetornarNull_QuandoNaoExistir()
     {
         // Arrange
-        await ClearAgendamentosAsync();
+        await _fixture.ResetDatabaseAsync();
 
         // Act
         var result = await _repository.BuscarPorId(Guid.NewGuid());
@@ -142,4 +140,29 @@ public class AgendamentoRepositoryTest
         // Assert
         Assert.Null(result);
     }
+
+    [Fact, Order(5)]
+
+    public async Task ConsultarAgendamentosPorUsuario_DeveRetornarAgendamentosDoDiaAtual()
+    {
+        // Arrange
+        await _fixture.ResetDatabaseAsync();
+        var (pacienteId, horarioId) = await SeedAgendamentoDependenciesAsync();
+
+        // Cria um horário para hoje (ou futuro) e um agendamento associado
+        var dataHorario = DateTime.Today.AddHours(14);
+        // Atualiza o horário do agendamento sem alterar as dependências já criadas
+
+        var agendamento = new Agendamento(pacienteId, horarioId);
+        _context.Agendamentos.Add(agendamento);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var resultado = await _repository.ConsultarAgendamentosPorUsuario(eTipoUsuario.Paciente, pacienteId);
+
+        // Assert
+        Assert.NotNull(resultado);
+        Assert.Single(resultado);
+    }
+
 }

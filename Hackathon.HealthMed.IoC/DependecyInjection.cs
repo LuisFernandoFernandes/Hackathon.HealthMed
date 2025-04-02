@@ -45,7 +45,7 @@ public static class DependecyInjection
         services.AddScoped<IHorarioRepository, HorarioRepository>();
         services.AddScoped<IHorarioService, HorarioService>();
 
-        //services.AddAutoMapper(typeof(AgendamentoMappingProfile));
+        services.AddAutoMapper(typeof(AgendamentoMappingProfile));
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IAgendamentoService, AgendamentoService>();
 

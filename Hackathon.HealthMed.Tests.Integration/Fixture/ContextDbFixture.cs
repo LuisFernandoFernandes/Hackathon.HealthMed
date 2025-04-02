@@ -83,6 +83,18 @@ namespace Hackathon.HealthMed.Tests.Integration.Fixture
             }
             await _msSqlContainer.StopAsync();
         }
+
+        public async Task ResetDatabaseAsync()
+        {
+            // Limpa os dados na ordem correta
+            await Context!.Database.ExecuteSqlRawAsync("DELETE FROM Agendamentos");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Horarios");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Medicos");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Pacientes");
+            await Context.Database.ExecuteSqlRawAsync("DELETE FROM Usuarios");
+            Context.ChangeTracker.Clear();
+        }
+
     }
 }
 
