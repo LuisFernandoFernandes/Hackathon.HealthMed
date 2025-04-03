@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: healthmed-api
-        image: luisfernandofernandes/hackathon-healthmed:2.1
+        image: luisfernandofernandes/hackathon-healthmed:2.2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
