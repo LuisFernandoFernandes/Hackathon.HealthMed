@@ -60,9 +60,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{52C7BFD3-9BC3-4D0D-A74D-CC191A78FE79}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{F792AA60-8F82-42B6-9C0B-9E458029C167}"
-	ProjectSection(SolutionItems) = preProject
-		deploy.yml = deploy.yml
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
