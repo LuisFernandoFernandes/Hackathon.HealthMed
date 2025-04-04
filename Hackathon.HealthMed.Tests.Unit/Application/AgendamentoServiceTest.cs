@@ -5,6 +5,7 @@ using Hackathon.HealthMed.Application.Services;
 using Hackathon.HealthMed.Domain.Entities;
 using Hackathon.HealthMed.Domain.Enum;
 using Hackathon.HealthMed.Infra.Interfaces;
+using Hackathon.HealthMed.Infra.Messaging;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using StackExchange.Redis;
@@ -26,6 +27,7 @@ public class AgendamentoServiceTest
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
     private readonly Mock<IConnectionMultiplexer> _redisMock;
     private readonly Mock<IDatabase> _redisDbMock;
+    private readonly Mock<IAgendarConsultaFila> _agendarConsultaFila;
     private readonly AgendamentoService _agendamentoService;
 
     private readonly Guid _usuarioId;
@@ -42,6 +44,7 @@ public class AgendamentoServiceTest
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         _redisMock = new Mock<IConnectionMultiplexer>();
         _redisDbMock = new Mock<IDatabase>();
+        _agendarConsultaFila = new Mock<IAgendarConsultaFila>();
 
         _redisMock.Setup(r => r.GetDatabase(It.IsAny<int>(), It.IsAny<object>()))
                   .Returns(_redisDbMock.Object);
@@ -73,14 +76,15 @@ public class AgendamentoServiceTest
             _horarioRepositoryMock.Object,
             _mapperMock.Object,
             _httpContextAccessorMock.Object,
-            _redisMock.Object
+            _redisMock.Object,
+            _agendarConsultaFila.Object
         );
     }
 
     #region AgendarConsulta
 
     [Fact]
-    public async Task AgendarConsulta_DeveRetornarGuid_QuandoSucesso()
+    public async Task AgendarConsulta_DeveRetornarMensagem_QuandoSucesso()
     {
         // Arrange
         var dto = new AgendarConsultaDTO
@@ -89,35 +93,32 @@ public class AgendamentoServiceTest
         };
 
         var horario = new Horario(_medicoId, DateTime.UtcNow.AddDays(1), 150.00M);
-        Agendamento capturedAgendamento = null;
+
         _horarioRepositoryMock
             .Setup(r => r.BuscarHorarioPorIdEStatus(dto.HorarioId, eStatusHorario.Disponivel))
             .ReturnsAsync(horario);
 
-        _agendamentoRepositoryMock
-            .Setup(r => r.Adicionar(It.IsAny<Agendamento>()))
-            .Callback<Agendamento>(ag =>
-            {
-                capturedAgendamento = ag;
-                var newId = Guid.NewGuid();
-                typeof(Agendamento).GetProperty("Id").SetValue(ag, newId);
-            })
+        _horarioRepositoryMock
+            .Setup(r => r.Editar(It.IsAny<Horario>()))
             .Returns(Task.CompletedTask);
 
-        _horarioRepositoryMock.Setup(r => r.Editar(It.IsAny<Horario>()))
-                              .Returns(Task.CompletedTask);
-        _redisDbMock.Setup(db => db.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
-                    .ReturnsAsync(true);
+        _redisDbMock
+            .Setup(db => db.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
+            .ReturnsAsync(true);
 
         // Act
         var result = await _agendamentoService.AgendarConsulta(dto);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.NotNull(capturedAgendamento);
-        var expectedId = (Guid)typeof(Agendamento).GetProperty("Id").GetValue(capturedAgendamento);
-        Assert.Equal(expectedId, result.Data);
+
+        var expectedText = "Agendamento em processamento, consulte seus agendamentos em breve.";
+        Assert.Equal(expectedText, result.Data);
+
+        // Se quiser validar o status do horário:
+        Assert.Equal(eStatusHorario.Reservado, horario.Status);
     }
+
 
     [Fact]
     public async Task AgendarConsulta_DeveRetornarErro_QuandoHorarioNaoDisponivel()
@@ -392,8 +393,8 @@ public class AgendamentoServiceTest
 
         // Configura o mapeamento para retornar um DTO com os mesmos valores
         _mapperMock.Setup(m => m.Map<IEnumerable<AgendamentoDTO>>(It.IsAny<IEnumerable<Agendamento>>()))
-            .Returns(new List<AgendamentoDTO>
-            {
+            .Returns(
+            [
                 new AgendamentoDTO
                 {
                     Id = agendamento.Id,
@@ -401,7 +402,7 @@ public class AgendamentoServiceTest
                     HorarioId = agendamento.Horario.Id,
                     Status = eStatusAgendamento.Pendente
                 }
-            });
+            ]);
 
         // Simula que o usuário autenticado é Paciente
         _pacienteRepositoryMock.Setup(r => r.BuscarPacientePorUsuarioId(_usuarioId))

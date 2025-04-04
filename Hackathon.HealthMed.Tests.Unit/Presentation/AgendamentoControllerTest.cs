@@ -28,8 +28,8 @@ public class AgendamentoControllerTest
             HorarioId = Guid.NewGuid()
         };
 
-        var expectedAgendamentoId = Guid.NewGuid();
-        var serviceResult = new ServiceResult<Guid>(expectedAgendamentoId);
+        var expectedText = string.Empty;
+        var serviceResult = new ServiceResult<string>(expectedText);
         _agendamentoServiceMock
             .Setup(s => s.AgendarConsulta(dto))
             .ReturnsAsync(serviceResult);
@@ -39,8 +39,8 @@ public class AgendamentoControllerTest
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var data = Assert.IsType<Guid>(okResult.Value);
-        Assert.Equal(expectedAgendamentoId, data);
+        var data = Assert.IsType<string>(okResult.Value);
+        Assert.Equal(expectedText, data);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class AgendamentoControllerTest
         };
 
         var errorMessage = "Horário inválido ou já reservado.";
-        var serviceResult = new ServiceResult<Guid>(new Exception(errorMessage));
+        var serviceResult = new ServiceResult<string>(new Exception(errorMessage));
         _agendamentoServiceMock
             .Setup(s => s.AgendarConsulta(dto))
             .ReturnsAsync(serviceResult);

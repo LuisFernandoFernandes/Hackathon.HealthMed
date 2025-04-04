@@ -77,8 +77,8 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
 
         // Assert: espera status OK e um Guid válido (ID do agendamento)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var resultado = await response.Content.ReadFromJsonAsync<Guid>();
-        Assert.NotEqual(Guid.Empty, resultado);
+        var resultado = await response.Content.ReadAsStringAsync();
+        Assert.Equal("Agendamento em processamento, consulte seus agendamentos em breve.", resultado);
     }
 
     [Fact, Order(2)]
@@ -135,10 +135,6 @@ public class AgendamentoControllerTest : IClassFixture<CustomWebApplicationFacto
 
         // Act
         var response = await _client.PutAsJsonAsync("/api/agendamento/confirmar", confirmarAgendamentoDTO);
-
-        // Se houver erro 500, pode ser útil debugar o conteúdo:
-        // var erro = await response.Content.ReadAsStringAsync();
-        // Console.WriteLine("Erro 500: " + erro);
 
         // Assert: espera status OK e um booleano true
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

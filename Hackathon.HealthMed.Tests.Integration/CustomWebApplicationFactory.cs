@@ -1,4 +1,6 @@
-﻿using Hackathon.HealthMed.Infra.Context;
+﻿using Hackathon.HealthMed.Domain.Entities;
+using Hackathon.HealthMed.Infra.Context;
+using Hackathon.HealthMed.Infra.Interfaces;
 using Hackathon.HealthMed.Tests.Integration.Fixture;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -62,6 +64,17 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                     .RequireAuthenticatedUser()
                     .Build();
             });
+
+            // Mock para IAgendarConsultaFila
+            services.RemoveAll(typeof(IAgendarConsultaFila));
+
+            var filaMock = new Mock<IAgendarConsultaFila>();
+            filaMock
+                .Setup(f => f.AgendarAsync(It.IsAny<Agendamento>()))
+                .Returns(Task.CompletedTask);
+
+            services.AddSingleton(filaMock.Object);
+
         });
 
         builder.UseEnvironment("Development");
