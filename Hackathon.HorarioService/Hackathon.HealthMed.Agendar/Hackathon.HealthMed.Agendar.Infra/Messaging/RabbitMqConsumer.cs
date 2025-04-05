@@ -110,6 +110,7 @@ public class RabbitMqConsumer
 
     public async Task StartListeningAsync(CancellationToken stoppingToken)
     {
+        _logger.Information("🚀 Iniciando consumo da fila RabbitMQ...");
         var retryPolicy = Policy
             .Handle<BrokerUnreachableException>()
             .Or<Exception>()
@@ -134,14 +135,26 @@ public class RabbitMqConsumer
             var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += async (model, ea) =>
             {
-                _logger.Information("Mensagem recebida");
+                var body1 = ea.Body.ToArray();
+                var message1 = Encoding.UTF8.GetString(body1);
+                _logger.Information("Mensagem recebida: {Message}", message1);
                 var stopwatch = Stopwatch.StartNew();
 
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
                 using var scope = _serviceProvider.CreateScope();
-                var messageProcessor = scope.ServiceProvider.GetRequiredService<IMessageProcessor>();
+                IMessageProcessor? messageProcessor = null;
+                try
+                {
+                    messageProcessor = scope.ServiceProvider.GetRequiredService<IMessageProcessor>();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "❌ Não foi possível resolver IMessageProcessor");
+                    throw;
+                }
+
 
                 var resultadoProcessamento = await messageProcessor.ProcessMessageAsync(message);
 

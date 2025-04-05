@@ -7,6 +7,13 @@
       },
       "dotnetRunMessages": true
     },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
@@ -17,5 +24,13 @@
       "useSSL": false
     }
   },
-  "$schema": "https://json.schemastore.org/launchsettings.json"
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:58208/",
+      "sslPort": 44387
+    }
+  }
 }

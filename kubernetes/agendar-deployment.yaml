@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: agendar-service
-        image: luisfernandofernandes/hackathon-agendar-service:1.3
+        image: luisfernandofernandes/hackathon-agendar-service:2.2
         imagePullPolicy: Always
         ports:
         - containerPort: 5001
@@ -27,8 +27,18 @@ spec:
           value: Development
         - name: ConnectionStrings__DefaultConnection
           value: "Server=sqlserver;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
-        - name: RabbitMq__Host
+        - name: RabbitMQ__HostName
           value: "rabbitmq"
+        - name: RabbitMQ__Port
+          value: "5672"
+        - name: RabbitMQ__UserName
+          value: "guest"
+        - name: RabbitMQ__Password
+          value: "guest"
+        - name: RabbitMQ__Exchange
+          value: "Hackathon.HeathMed.Agendar"
+        - name: RabbitMQ__QueueName
+          value: "Hackathon.HeathMed.Agendar.AddToDatabase"
 ---
 apiVersion: v1
 kind: Service
