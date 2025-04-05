@@ -9,7 +9,7 @@ namespace Hackathon.HealthMed.Agendar.Domain.Entitites;
 
 public class Agendamento
 {
-    public Guid? Id { get; private set; }
+    public Guid Id { get; private set; }
     public Guid PacienteId { get; private set; }
     public Guid HorarioId { get; private set; }
     public eStatusAgendamento Status { get; private set; } = eStatusAgendamento.Pendente;
@@ -18,6 +18,7 @@ public class Agendamento
 
     public Agendamento(Guid pacienteId, Guid horarioId)
     {
+        Id = Guid.NewGuid();
         PacienteId = pacienteId;
         HorarioId = horarioId;
     }

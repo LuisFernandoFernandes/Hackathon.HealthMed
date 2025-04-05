@@ -8,7 +8,7 @@ public class AgendamentoRepository(AppDBContext _context) : IAgendamentoReposito
 {
     public async Task Agendar(Agendamento agendamento)
     {
-        _context.Agendamento.Add(agendamento);
+        _context.Agendamentos.Add(agendamento);
         await _context.SaveChangesAsync();
     }
 }

@@ -16,5 +16,5 @@ public class AppDBContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 
-    public DbSet<Agendamento> Agendamento { get; set; }
+    public DbSet<Agendamento> Agendamentos { get; set; }
 }

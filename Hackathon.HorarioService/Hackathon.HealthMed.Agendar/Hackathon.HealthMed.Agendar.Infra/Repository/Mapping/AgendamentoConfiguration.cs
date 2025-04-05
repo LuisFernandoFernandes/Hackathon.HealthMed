@@ -8,7 +8,7 @@ public class AgendamentoConfiguration : IEntityTypeConfiguration<Agendamento>
 {
     public void Configure(EntityTypeBuilder<Agendamento> builder)
     {
-        builder.ToTable("Agendamento");
+        builder.ToTable("Agendamentos");
 
         builder.HasKey(a => a.Id);
 
