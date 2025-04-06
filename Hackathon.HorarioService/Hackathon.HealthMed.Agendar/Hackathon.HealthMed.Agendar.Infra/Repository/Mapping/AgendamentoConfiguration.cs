@@ -8,7 +8,8 @@ public class AgendamentoConfiguration : IEntityTypeConfiguration<Agendamento>
 {
     public void Configure(EntityTypeBuilder<Agendamento> builder)
     {
-        builder.ToTable("Agendamentos");
+        // Força o uso da tabela "Agendamentos" no schema padrão (dbo)
+        builder.ToTable("Agendamentos", "dbo");
 
         builder.HasKey(a => a.Id);
 
@@ -26,10 +27,11 @@ public class AgendamentoConfiguration : IEntityTypeConfiguration<Agendamento>
             .IsRequired();
 
         builder.Property(a => a.JustificativaCancelamento)
-            .HasMaxLength(500);
+            .HasMaxLength(255)
+            .IsRequired(false);
 
         builder.Property(a => a.DataCriacao)
             .IsRequired()
-            .HasColumnType("datetime2");
+            .HasColumnType("smalldatetime");
     }
 }

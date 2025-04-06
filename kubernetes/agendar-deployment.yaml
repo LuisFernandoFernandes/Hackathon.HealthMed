@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: agendar-service
-        image: luisfernandofernandes/hackathon-agendar-service:2.2
+        image: luisfernandofernandes/hackathon-agendar-service:2.3
         imagePullPolicy: Always
         ports:
         - containerPort: 5001
@@ -26,7 +26,7 @@ spec:
         - name: ASPNETCORE_ENVIRONMENT
           value: Development
         - name: ConnectionStrings__DefaultConnection
-          value: "Server=sqlserver;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
+          value: "Server=sqlserver;Database=HealthMedDB;User Id=sa;Password=SuaSenha123!;TrustServerCertificate=True;MultipleActiveResultSets=true;"
         - name: RabbitMQ__HostName
           value: "rabbitmq"
         - name: RabbitMQ__Port
