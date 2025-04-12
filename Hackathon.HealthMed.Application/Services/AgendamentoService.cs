@@ -22,6 +22,7 @@ public class AgendamentoService : IAgendamentoService
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IDatabase _redisDb;
+    private readonly IAgendarConsultaFila _agendarConsultaFila;
 
     public AgendamentoService(
         IAgendamentoRepository agendamentoRepository,
@@ -30,7 +31,7 @@ public class AgendamentoService : IAgendamentoService
         IHorarioRepository horarioRepository,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,
-        IConnectionMultiplexer redis)
+        IConnectionMultiplexer redis, IAgendarConsultaFila agendarConsultaFila)
     {
         _agendamentoRepository = agendamentoRepository;
         _medicoRepository = medicoRepository;
@@ -39,9 +40,10 @@ public class AgendamentoService : IAgendamentoService
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _redisDb = redis.GetDatabase();
+        _agendarConsultaFila = agendarConsultaFila;
     }
 
-    public async Task<ServiceResult<Guid>> AgendarConsulta(AgendarConsultaDTO dto)
+    public async Task<ServiceResult<string>> AgendarConsulta(AgendarConsultaDTO dto)
     {
         try
         {
@@ -54,21 +56,21 @@ public class AgendamentoService : IAgendamentoService
                 throw new ValidacaoException("Horário inválido ou já reservado.");
             }
 
-            var agendamento = new Agendamento(pacienteId, dto.HorarioId);
-
-            await _agendamentoRepository.Adicionar(agendamento);
-
             horario.AtualizarStatus(eStatusHorario.Reservado);
 
             await _horarioRepository.Editar(horario);
             var cacheKey = $"horarios_{horario.MedicoId}";
             await _redisDb.KeyDeleteAsync(cacheKey);
 
-            return new ServiceResult<Guid>(agendamento.Id);
+            var agendamento = new Agendamento(pacienteId, dto.HorarioId);
+
+            await _agendarConsultaFila.AgendarAsync(agendamento);
+
+            return new ServiceResult<string>("Agendamento em processamento, consulte seus agendamentos em breve.");
         }
         catch (Exception ex)
         {
-            return new ServiceResult<Guid>(ex);
+            return new ServiceResult<string>(ex);
         }
     }
 

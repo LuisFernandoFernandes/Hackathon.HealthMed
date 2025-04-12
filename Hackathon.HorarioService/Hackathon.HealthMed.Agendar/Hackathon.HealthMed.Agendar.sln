@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Worker", "1 - Worker", "{3F26C08E-46FC-434E-B958-C41F439396C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Agendar.Service", "Hackathon.HealthMed.Agendar.Service\Hackathon.HealthMed.Agendar.Service.csproj", "{CC5992BB-C2C3-427F-A66A-EC67575333B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4706D237-E76C-471B-9641-428D69306659} = {4706D237-E76C-471B-9641-428D69306659}
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0} = {B8783565-E3D5-4366-9E28-2E156DDC07B0}
+		{DD436785-C914-42DD-9268-27A87A9810C3} = {DD436785-C914-42DD-9268-27A87A9810C3}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{D7B71EB3-50D5-4861-BE00-A8362F6F93F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", "{1C31B0BB-2DDC-41BD-A2B4-050FA301C5DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{09691BF9-44A4-4E7F-85F6-F99F85C88C9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - Test", "6 - Test", "{CD18D8D9-2FA4-4A4B-B0BA-27EDC9120657}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Agendar.Application", "Hackathon.HealthMed.Agendar.Application\Hackathon.HealthMed.Agendar.Application.csproj", "{DD436785-C914-42DD-9268-27A87A9810C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0} = {B8783565-E3D5-4366-9E28-2E156DDC07B0}
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544} = {E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Agendar.Domain", "Hackathon.HealthMed.Agendar.Domain\Hackathon.HealthMed.Agendar.Domain.csproj", "{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Agendar.Infra", "Hackathon.HealthMed.Agendar.Infra\Hackathon.HealthMed.Agendar.Infra.csproj", "{B8783565-E3D5-4366-9E28-2E156DDC07B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544} = {E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - IoC", "5 - IoC", "{608C9B5A-ECF1-4D27-A42B-54044E4C8A98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hackathon.HealthMed.Agendar.IoC", "Hackathon.HealthMed.Agendar.IoC\Hackathon.HealthMed.Agendar.IoC.csproj", "{4706D237-E76C-471B-9641-428D69306659}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0} = {B8783565-E3D5-4366-9E28-2E156DDC07B0}
+		{DD436785-C914-42DD-9268-27A87A9810C3} = {DD436785-C914-42DD-9268-27A87A9810C3}
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544} = {E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC5992BB-C2C3-427F-A66A-EC67575333B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5992BB-C2C3-427F-A66A-EC67575333B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5992BB-C2C3-427F-A66A-EC67575333B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5992BB-C2C3-427F-A66A-EC67575333B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD436785-C914-42DD-9268-27A87A9810C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD436785-C914-42DD-9268-27A87A9810C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD436785-C914-42DD-9268-27A87A9810C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD436785-C914-42DD-9268-27A87A9810C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4706D237-E76C-471B-9641-428D69306659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4706D237-E76C-471B-9641-428D69306659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4706D237-E76C-471B-9641-428D69306659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4706D237-E76C-471B-9641-428D69306659}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CC5992BB-C2C3-427F-A66A-EC67575333B6} = {3F26C08E-46FC-434E-B958-C41F439396C8}
+		{DD436785-C914-42DD-9268-27A87A9810C3} = {D7B71EB3-50D5-4861-BE00-A8362F6F93F7}
+		{E6D7506D-464B-4D26-9C6C-1CC6F4F2C544} = {1C31B0BB-2DDC-41BD-A2B4-050FA301C5DD}
+		{B8783565-E3D5-4366-9E28-2E156DDC07B0} = {09691BF9-44A4-4E7F-85F6-F99F85C88C9A}
+		{4706D237-E76C-471B-9641-428D69306659} = {608C9B5A-ECF1-4D27-A42B-54044E4C8A98}
+	EndGlobalSection
+EndGlobal

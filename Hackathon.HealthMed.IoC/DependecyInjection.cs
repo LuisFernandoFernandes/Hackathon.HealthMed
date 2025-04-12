@@ -4,6 +4,7 @@ using Hackathon.HealthMed.Application.Mappings;
 using Hackathon.HealthMed.Application.Services;
 using Hackathon.HealthMed.Infra.Context;
 using Hackathon.HealthMed.Infra.Interfaces;
+using Hackathon.HealthMed.Infra.Messaging;
 using Hackathon.HealthMed.Infra.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -49,9 +50,8 @@ public static class DependecyInjection
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IAgendamentoService, AgendamentoService>();
 
-
-
-
+        services.AddScoped<IAgendarConsultaFila, AgendarConsultaFila>();
+        services.AddScoped<IRabbitMqClient, RabbitMqClient>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -68,21 +68,6 @@ public static class DependecyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]))
                 };
             });
-
-
-        //exemplo de como adicionar mais dependencias
-        //services.AddScoped<IValidator<DDDDto>, DDDValidator>();
-        //services.AddScoped<IValidator<ContatoDto>, ContatoValidator>();
-
-
-        //services.AddScoped<IContatoRepository, ContatoRepository>();
-        //services.AddScoped<IContatoService, ContatoService>();
-        //services.AddScoped<IContatoAddFila, ContatoAddFila>();
-        //services.AddScoped<IContatoUpdateFila, ContatoUpdateFila>();
-        //services.AddScoped<IContatoDeleteFila, ContatoDeleteFila>();
-        //services.AddAutoMapper(typeof(ContatoMapingProfile));
-
-        //services.AddScoped<IRabbitMqClient, RabbitMqClient>();
 
         return services;
     }
