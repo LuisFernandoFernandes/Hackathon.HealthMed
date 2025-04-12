@@ -444,7 +444,7 @@ Hackathon.HealthMed/     → API principal (.NET)
 
 ```bash
 git clone https://github.com/LuisFernandoFernandes/Hackathon.HealthMed.git
-cd Hackathon.HealthMed/Hackathon.HealthMed/kubernetes
+cd Hackathon.HealthMed/kubernetes
 ```
 
 ---
@@ -475,16 +475,26 @@ Com os pods rodando (`kubectl get pods`), execute os seguintes comandos em termi
 
 ```
 kubectl port-forward svc/healthmed-api 8080:8080
+```
+
+```
 kubectl port-forward svc/prometheus 9090:9090
+```
+
+```
 kubectl port-forward svc/grafana 3000:3000
+```
+
+```
 kubectl port-forward svc/rabbitmq 15672:15672
 ```
+
 
 ---
 
 ## 🌐 Endpoints úteis
 
-- 🧪 **Swagger API**: http://localhost:8080/swagger
+- 🧪 **Swagger API**: [http://localhost:8080/swagger](http://localhost:8080/index.html)
 - 📊 **Prometheus**: http://localhost:9090
 - 📈 **Grafana**: http://localhost:3000
     
