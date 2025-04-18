@@ -1,4 +1,4 @@
-# 📌 Documentação do MVP - Health&Med (Hackathon FIAP 4NETT)
+# 📌 Documentação do MVP - Health&Med (Hackathon FIAP)
 
 ## 📚 Índice
 
@@ -19,6 +19,8 @@
 # 🚀 **Introdução**
 
 A Health&Med é uma startup inovadora no setor de saúde, focada em Telemedicina. Este documento descreve o MVP desenvolvido como solução proprietária para agendamento e gerenciamento de consultas online, visando segurança, escalabilidade e eficiência.
+
+🎥 Confira a apresentação completa do projeto neste [vídeo](https://www.youtube.com/watch?v=9j4oYC9blZc).
 
 ---
 
